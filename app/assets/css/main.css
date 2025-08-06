@@ -1,11 +1,21 @@
 @import "tailwindcss";
 
+/* dark mode regulated with the dark class */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --font-poppins: "Poppins", san-serif;
     --color-primary: #014421;
     --color-light: #E6ECE9;
     --color-light-secondary: #8AA999;
     --color-very-green: #2BFF00;
+    --color-app-bg: #FAFAFA;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+      }
 }
 
 @layer components {

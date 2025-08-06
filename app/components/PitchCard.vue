@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-light/20 rounded-lg overflow-hidden">
+    <div class="dark:bg-light/20 bg-light rounded-lg overflow-hidden">
         <!-- image -->
         <div class="w-full aspect-video">
             <NuxtImg :src="card.image" alt="pitch" class="w-full h-full object-cover" />
@@ -7,9 +7,9 @@
 
         <!-- details -->
         <div class="px-2 py-3 space-y-1">
-            <h3 class="text-sm font-semibold">{{ card.name }}</h3>
-            <p class="text-xs text-light/60">{{ card.pitchType }}</p>
-            <p class="text-xs flex items-center gap-1">
+            <h3 class="text-sm md:text-base font-semibold dark:text-white text-[#545454]">{{ card.name }}</h3>
+            <p class="text-xs md:text-sm dark:text-light/60 text-[#8A8A8A]">{{ card.pitchType }}</p>
+            <p class="text-xs md:text-sm flex items-center gap-1 dark:text-white text-[#545454]">
                 <Icon name="material-symbols:location-on" class="text-sm" />
                 {{ card.location }}
             </p>

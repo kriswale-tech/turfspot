@@ -1,5 +1,5 @@
 <template>
-    <div class="font-poppins">
+    <div class="font-poppins bg-app-bg">
         <slot />
     </div>
 </template>
