@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+    --font-poppins: "Poppins", san-serif;
+    --color-primary: #014421;
+    --color-light: #E6ECE9;
+    --color-light-secondary: #8AA999;
+    --color-very-green: #2BFF00;
+}
+
+@layer components {
+    .max-width {
+        @apply max-w-[1440px] mx-auto px-4;
+    }
+    
+    .hide-scrollbar {
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        -webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Firefox */
+        scrollbar-width: none;
+        
+        /* IE and Edge */
+        -ms-overflow-style: none;
+    }
+}
