@@ -32,7 +32,9 @@
             :class="stickySectionBgClass">
             <div class="max-width">
                 <div class="mb-5 transition-all duration-300 lg:hidden" :class="logoVisibilityClass">
-                    <AppLogo />
+                    <NuxtLink to="/">
+                        <AppLogo />
+                    </NuxtLink>
                 </div>
 
                 <div class="flex justify-between gap-2 items-center lg:pt-5 ">
@@ -79,6 +81,18 @@ function handleScroll() {
     }
 }
 
+let ticking = false
+
+function handleScrollThrottled() {
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            handleScroll()
+            ticking = false
+        })
+        ticking = true
+    }
+}
+
 
 const logoVisibilityClass = computed(() => {
     return isStuck.value ? 'opacity-100 visible' : 'opacity-0 invisible'
@@ -91,7 +105,7 @@ const stickySectionBgClass = computed(() => {
 watch(
     () => route.hash,
     (newHash) => {
-        hideHeader.value = newHash === '#find'
+        hideHeader.value = newHash === '#find' ? true : false
     },
     { immediate: true }
 )
@@ -99,13 +113,13 @@ watch(
 onMounted(() => {
     hideHeader.value = route.hash === '#find'
     handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', handleScroll, { passive: true })
+    window.addEventListener('scroll', handleScrollThrottled, { passive: true })
+    window.addEventListener('resize', handleScrollThrottled, { passive: true })
 })
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-    window.removeEventListener('resize', handleScroll)
+    window.removeEventListener('scroll', handleScrollThrottled)
+    window.removeEventListener('resize', handleScrollThrottled)
 })
 </script>
 
