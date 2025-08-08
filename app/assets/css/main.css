@@ -22,6 +22,10 @@
     .max-width {
         @apply max-w-[1440px] mx-auto px-4;
     }
+
+    .card-shadow {
+        @apply shadow-[0_4px_16px_0_rgba(0,0,0,0.1)]
+    }
     
     .hide-scrollbar {
         /* Webkit browsers (Chrome, Safari, Edge) */
