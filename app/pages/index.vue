@@ -8,7 +8,10 @@
             isDark ? 'opacity-100 bg-[url(/assets/images/turf-bg.svg)]' : 'opacity-0'
         ]"></div>
 
-        <header v-if="!hideHeader" class="max-width pt-14 relative z-10 lg:hidden">
+
+        <header class="max-width pt-14 relative z-10 lg:hidden transition-all duration-500" :class="{
+            'opacity-0 pointer-events-none overflow-hidden max-h-0 !pt-0': fullyHideHeader
+        }">
             <!-- logo and icon -->
             <div class="flex justify-between items-center mb-12">
                 <AppLogo />
@@ -39,7 +42,7 @@
 
                 <div class="flex justify-between gap-2 items-center lg:pt-5 ">
                     <SearchBar />
-                    <FilterIcon />
+                    <FilterIcon @click="filterOpen = true; $router.push('#find')" class="cursor-pointer" />
                 </div>
 
                 <div class="my-5">
@@ -51,6 +54,11 @@
         <section class="max-width relative z-10">
             <PitchList />
         </section>
+
+        <!-- Filters -->
+        <FilterContainer :model-value="filterOpen" title="Filters" @close="filterOpen = false">
+            <template #title>Filters</template>
+        </FilterContainer>
     </div>
 </template>
 
@@ -64,12 +72,15 @@ definePageMeta({
 const stickySection = ref<HTMLElement | null>(null)
 const isStuck = ref(false)
 const isDark = ref(false)
-const hideHeader = ref(false)
+// const hideHeader = ref(false)
+const fullyHideHeader = ref(false)
+const filterOpen = ref(false)
 
 const route = useRoute()
 
 function handleScroll() {
     if (!stickySection.value) return
+
     const { top } = stickySection.value.getBoundingClientRect()
     isStuck.value = top <= 0
     isDark.value = top > 0
@@ -102,16 +113,33 @@ const stickySectionBgClass = computed(() => {
     return isStuck.value ? 'bg-app-bg/70 backdrop-blur-lg' : ''
 })
 
+// Watch for changes in the route hash to control header visibility.
+// - If hash is "#find": wait until the sticky section reaches the top, then collapse the header.
+// - If hash is anything else: instantly show the header and manually run handleScroll() so isStuck/isDark update even if no scroll event occurs.
 watch(
     () => route.hash,
     (newHash) => {
-        hideHeader.value = newHash === '#find' ? true : false
+        if (newHash === '#find') {
+            const checkIfAtTop = () => {
+                if (stickySection.value && stickySection.value.getBoundingClientRect().top <= 0) {
+                    fullyHideHeader.value = true
+                    window.removeEventListener('scroll', checkIfAtTop)
+                }
+            }
+            window.addEventListener('scroll', checkIfAtTop)
+        } else {
+            fullyHideHeader.value = false
+            // Force scroll logic update immediately
+            setTimeout(() => {
+                handleScroll()
+            }, 10)
+        }
     },
     { immediate: true }
 )
 
 onMounted(() => {
-    hideHeader.value = route.hash === '#find'
+    // hideHeader.value = route.hash === '#find'
     handleScroll()
     window.addEventListener('scroll', handleScrollThrottled, { passive: true })
     window.addEventListener('resize', handleScrollThrottled, { passive: true })
