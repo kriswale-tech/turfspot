@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="my-5">
-                    <UnitFilterItemsComponent />
+                    <UnitFilterItemsComponent @show-filter="showFilter" />
                 </div>
             </div>
         </section>
@@ -56,14 +56,15 @@
         </section>
 
         <!-- Filters -->
-        <FilterContainer :model-value="filterOpen" title="Filters" @close="filterOpen = false">
+        <FilterContainer :model-value="filterOpen" title="Filters" @close="filterOpen = false; singleFilter = null"
+            :single-filter="singleFilter">
             <template #title>Filters</template>
         </FilterContainer>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import type { SingleFilter } from '~/types/filter'
 
 definePageMeta({
     layout: 'pitchlistings'
@@ -75,8 +76,10 @@ const isDark = ref(false)
 // const hideHeader = ref(false)
 const fullyHideHeader = ref(false)
 const filterOpen = ref(false)
+const singleFilter = ref<SingleFilter | null>(null)
 
 const route = useRoute()
+const router = useRouter()
 
 function handleScroll() {
     if (!stickySection.value) return
@@ -104,6 +107,12 @@ function handleScrollThrottled() {
     }
 }
 
+function showFilter(filter: string) {
+    singleFilter.value = filter as SingleFilter
+    console.log(singleFilter.value)
+    router.push('#find')
+    filterOpen.value = true
+}
 
 const logoVisibilityClass = computed(() => {
     return isStuck.value ? 'opacity-100 visible' : 'opacity-0 invisible'

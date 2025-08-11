@@ -38,7 +38,19 @@
                     </div>
 
                     <!-- Content (divided sections) -->
-                    <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6">
+                    <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6" v-if="singleFilter">
+                        <!-- filter items -->
+                        <FiltersSortFilter @updated="handleUpdated" v-if="singleFilter === 'sort'" />
+                        <FiltersPitchType @updated="handleUpdated" v-if="singleFilter === 'pitch-type'" />
+                        <FiltersPricePerHour @updated="handleUpdated" v-if="singleFilter === 'price-per-hour'" />
+                        <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'" />
+                        <FiltersPurposeFilter @updated="handleUpdated" v-if="singleFilter === 'purpose'" />
+                        <FiltersFacilitiesFilter @updated="handleUpdated" v-if="singleFilter === 'facilities'" />
+
+                    </form>
+
+                    <!-- Single Filter -->
+                    <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6" v-else>
                         <!-- filter items -->
                         <FiltersSortFilter @updated="handleUpdated" />
                         <FiltersPitchType @updated="handleUpdated" />
@@ -64,9 +76,12 @@
 </template>
 
 <script setup lang="ts">
+import type { SingleFilter } from '~/types/filter';
+
 const props = defineProps({
     modelValue: { type: Boolean, default: false },
     title: { type: String, default: 'Filter' },
+    singleFilter: { type: String as PropType<SingleFilter | null>, default: null }
 })
 
 const emit = defineEmits<{
@@ -119,6 +134,7 @@ function releaseScrollLock() {
 watch(
     () => props.modelValue,
     (open) => {
+        console.log(props.singleFilter)
         if (open) applyScrollLock()
         else releaseScrollLock()
     },
