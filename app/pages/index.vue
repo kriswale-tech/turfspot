@@ -42,11 +42,11 @@
 
                 <div class="flex justify-between gap-2 items-center lg:pt-5 ">
                     <SearchBar />
-                    <FilterIcon @click="filterOpen = true; $router.push('#find')" class="cursor-pointer" />
+                    <FilterIcon class="cursor-pointer" @click="filterOpen = true; $router.push('#find')" />
                 </div>
 
                 <div class="my-5">
-                    <UnitFilterItemsComponent @show-filter="showFilter" />
+                    <UnitFilterItemsComponent :filter-items="filterItems" @show-filter="showFilter" />
                 </div>
             </div>
         </section>
@@ -56,15 +56,22 @@
         </section>
 
         <!-- Filters -->
-        <FilterContainer :model-value="filterOpen" title="Filters" @close="filterOpen = false; singleFilter = null"
-            :single-filter="singleFilter">
-            <template #title>Filters</template>
+        <FilterContainer :model-value="filterOpen" title="Filters" :single-filter="singleFilter"
+            @close="filterOpen = false; singleFilter = null">
+            <template #title>
+                <span v-if="singleFilter === null">Filters</span>
+                <template v-for="item in filterItems" :key="item.id">
+                    <UiFilterTitle v-if="singleFilter === item.filter" :title="item.title" :icon="item.icon"
+                        icon-class="!text-2xl" />
+                </template>
+            </template>
         </FilterContainer>
     </div>
 </template>
 
 <script setup lang="ts">
 import type { SingleFilter } from '~/types/filter'
+import { filterItems } from '~/lib/filter'
 
 definePageMeta({
     layout: 'pitchlistings'

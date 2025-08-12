@@ -1,10 +1,6 @@
 <template>
     <form class="py-4">
-
-        <div class="flex gap-2 font-semibold items-center mb-6">
-            <Icon name="mdi:soccer-field" class="text-xl" />
-            <p>Purpose</p>
-        </div>
+        <UiFilterTitle v-if="!hideTitle" title="Purpose" icon="mdi:soccer-field" class="font-semibold mb-6" />
 
 
         <!-- Options -->
@@ -22,6 +18,11 @@ const emit = defineEmits<{
     (e: 'updated', value: Record<string, unknown>): void
 }>()
 
+const props = defineProps<{
+    hideTitle?: boolean
+}>()
+
+const { hideTitle } = toRefs(props)
 
 const options = [
     {

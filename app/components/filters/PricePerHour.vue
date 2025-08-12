@@ -1,9 +1,6 @@
 <template>
     <div class="py-4">
-        <div class="flex gap-2 font-semibold items-center mb-6">
-            <Icon name="hugeicons:money-01" class="text-xl" />
-            <p>Price per Hour</p>
-        </div>
+        <UiFilterTitle v-if="!hideTitle" title="Price per Hour" icon="hugeicons:money-01" class="font-semibold mb-6" />
 
         <div class="flex gap-2 flex-wrap">
             <template v-for="option in options" :key="option.id">
@@ -21,6 +18,12 @@
 const emit = defineEmits<{
     (e: 'updated', value: Record<string, unknown>): void
 }>()
+
+const props = defineProps<{
+    hideTitle?: boolean
+}>()
+
+const { hideTitle } = toRefs(props)
 
 const options = [
     {

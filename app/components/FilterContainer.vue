@@ -9,7 +9,7 @@
 
         <!-- Modal Container (kept mounted to allow panel leave animation) -->
         <div class="fixed inset-0 z-50 flex items-end md:items-center justify-center md:p-6"
-            :class="{ 'pointer-events-none': !modelValue }">
+            :class="{ 'pointer-events-none': !modelValue }" @click.stop="handleClose">
             <Transition enter-active-class="transition duration-300 md:duration-200"
                 enter-from-class="translate-y-full md:translate-y-0 md:opacity-0 md:scale-95"
                 enter-to-class="translate-y-0 md:opacity-100 md:scale-100"
@@ -40,12 +40,17 @@
                     <!-- Content (divided sections) -->
                     <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6" v-if="singleFilter">
                         <!-- filter items -->
-                        <FiltersSortFilter @updated="handleUpdated" v-if="singleFilter === 'sort'" />
-                        <FiltersPitchType @updated="handleUpdated" v-if="singleFilter === 'pitch-type'" />
-                        <FiltersPricePerHour @updated="handleUpdated" v-if="singleFilter === 'price-per-hour'" />
-                        <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'" />
-                        <FiltersPurposeFilter @updated="handleUpdated" v-if="singleFilter === 'purpose'" />
-                        <FiltersFacilitiesFilter @updated="handleUpdated" v-if="singleFilter === 'facilities'" />
+                        <FiltersSortFilter @updated="handleUpdated" v-if="singleFilter === 'sort'" :hide-title="true" />
+                        <FiltersPitchType @updated="handleUpdated" v-if="singleFilter === 'pitch-type'"
+                            :hide-title="true" />
+                        <FiltersPricePerHour @updated="handleUpdated" v-if="singleFilter === 'price-per-hour'"
+                            :hide-title="true" />
+                        <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'"
+                            :hide-title="true" />
+                        <FiltersPurposeFilter @updated="handleUpdated" v-if="singleFilter === 'purpose'"
+                            :hide-title="true" />
+                        <FiltersFacilitiesFilter @updated="handleUpdated" v-if="singleFilter === 'facilities'"
+                            :hide-title="true" />
 
                     </form>
 

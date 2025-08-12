@@ -1,10 +1,7 @@
 <template>
     <form class="py-4">
-        <div class="flex gap-4 mb-6">
-            <div class="flex gap-2 font-semibold items-center">
-                <Icon name="mi:sort" class="text-xl" />
-                <p>Sort</p>
-            </div>
+        <div class="flex gap-4 mb-6 items-center">
+            <UiFilterTitle v-if="!hideTitle" title="Sort" icon="mi:sort" class="font-semibold" />
 
             <div class="relative group">
                 <div class="flex gap-1 text-sm text-primary items-center cursor-pointer group-hover:text-primary">
@@ -40,6 +37,12 @@
 const emit = defineEmits<{
     (e: 'updated', value: Record<string, unknown>): void
 }>()
+
+const props = defineProps<{
+    hideTitle?: boolean
+}>()
+
+const { hideTitle } = toRefs(props)
 
 
 const options = [

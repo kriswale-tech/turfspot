@@ -1,9 +1,12 @@
 <template>
+
     <div @click="showFilter"
-        class="flex items-center gap-2 rounded-lg p-1 px-3 lg:px-5 lg:py-2 dark:bg-light/20 bg-light cursor-pointer dark:text-white text-sm">
-        <Icon :name="icon" class="shrink-0 text-lg" />
-        <p class="whitespace-nowrap">{{ title }}</p>
+        class=" flex items-center gap-2 rounded-lg p-1 px-3 dark:bg-light/20 bg-light cursor-pointer dark:text-white text-sm active:bg-light-secondary/50 transition-colors ">
+        <UiFilterTitle :title="title" :icon="icon" />
+        <Icon name="material-symbols:keyboard-arrow-down" class="shrink-0 text-lg" />
+
     </div>
+
 </template>
 
 <script setup lang="ts">
@@ -21,7 +24,9 @@ const props = defineProps<{
 const { title, icon, filter } = toRefs(props);
 
 function showFilter() {
+
     emit('showFilter', filter.value)
+
 }
 </script>
 

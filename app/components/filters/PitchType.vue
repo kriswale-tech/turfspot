@@ -1,9 +1,7 @@
 <template>
     <div class="py-4">
-        <div class="flex gap-2 font-semibold items-center mb-6">
-            <Icon name="material-symbols:stadium-outline" class="text-xl" />
-            <p>Pitch Type</p>
-        </div>
+        <UiFilterTitle v-if="!hideTitle" title="Pitch Type" icon="material-symbols:stadium-outline"
+            class="font-semibold mb-6" />
 
         <div class="flex gap-2 flex-wrap">
             <template v-for="option in options" :key="option.id">
@@ -21,6 +19,12 @@
 const emit = defineEmits<{
     (e: 'updated', value: Record<string, unknown>): void
 }>()
+
+const props = defineProps<{
+    hideTitle?: boolean
+}>()
+
+const { hideTitle } = toRefs(props)
 
 const options = [
     {
