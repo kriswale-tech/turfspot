@@ -17,7 +17,7 @@
                 leave-from-class="translate-y-0 md:opacity-100 md:scale-100"
                 leave-to-class="translate-y-full md:translate-y-0 md:opacity-0 md:scale-95">
                 <div v-if="modelValue"
-                    class="bg-white w-full md:w-[700px] md:max-w-[700px] rounded-t-2xl md:rounded-3xl md:mx-auto md:my-auto overflow-hidden max-h-[95vh] md:max-h-[90vh] flex flex-col transform will-change-transform"
+                    class="bg-white w-full md:w-[700px] md:max-w-[700px] rounded-t-2xl md:rounded-3xl md:mx-auto md:my-auto overflow-hidden max-h-[95dvh] md:max-h-[90dvh] flex flex-col transform will-change-transform"
                     @click.stop role="dialog" aria-modal="true">
                     <!-- Header -->
                     <div class="flex items-center justify-between px-4 py-3 shrink-0">
