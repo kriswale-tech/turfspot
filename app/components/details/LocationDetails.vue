@@ -2,7 +2,7 @@
     <div class="card-shadow p-4 rounded-2xl">
         <h1 class="text-lg lg:text-xl font-medium mb-4">Location</h1>
 
-        <div class="space-y-3 mb-4">
+        <div class="space-y-4 mb-4">
             <!-- distance -->
             <!-- <div class="flex gap-3">
                 <Icon name="game-icons:path-distance" class="text-xl lg:text-2xl text-primary shrink-0" />
