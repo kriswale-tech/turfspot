@@ -45,8 +45,8 @@
                             :hide-title="true" />
                         <FiltersPricePerHour @updated="handleUpdated" v-if="singleFilter === 'price-per-hour'"
                             :hide-title="true" />
-                        <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'"
-                            :hide-title="true" />
+                        <!-- <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'"
+                            :hide-title="true" /> -->
                         <FiltersPurposeFilter @updated="handleUpdated" v-if="singleFilter === 'purpose'"
                             :hide-title="true" />
                         <FiltersFacilitiesFilter @updated="handleUpdated" v-if="singleFilter === 'facilities'"
@@ -60,7 +60,7 @@
                         <FiltersSortFilter @updated="handleUpdated" />
                         <FiltersPitchType @updated="handleUpdated" />
                         <FiltersPricePerHour @updated="handleUpdated" />
-                        <FiltersAvailabilityFilter @updated="handleUpdated" />
+                        <!-- <FiltersAvailabilityFilter @updated="handleUpdated" /> -->
                         <FiltersPurposeFilter @updated="handleUpdated" />
                         <FiltersFacilitiesFilter @updated="handleUpdated" />
                     </form>

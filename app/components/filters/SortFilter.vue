@@ -43,17 +43,24 @@ const props = defineProps<{
 }>()
 
 const { hideTitle } = toRefs(props)
+const { getLocation } = useUserGeolocation()
 
 
 const options = [
     {
         id: 1,
+        title: 'Alphabetical',
+        name: 'sort',
+        value: 'alphabetical'
+    },
+    {
+        id: 2,
         title: 'Closest',
         name: 'sort',
         value: 'closest'
     },
     {
-        id: 2,
+        id: 3,
         title: 'Cheapest',
         name: 'sort',
         value: 'cheapest'
@@ -64,8 +71,27 @@ const options = [
 const selectedSort = ref<string | null>(null)
 const sortOrder = ref<'asc' | 'desc'>('asc')
 
+async function gettingLocation(sortOption: string | null) {
+    if (sortOption === 'closest') {
+        const location = await getLocation()
+        console.log(location)
+        if (location.success) {
+            emit('updated', { sort: { sortBy: sortOption, sortOrder: sortOrder.value } })
+            console.log(location.coords?.latitude, location.coords?.longitude)
+        }
+        else {
+            alert('Location permission denied, please enable location permission in your browser settings to sort by closest')
+            selectedSort.value = 'alphabetical'
+            emit('updated', { sort: { sortBy: 'alphabetical', sortOrder: sortOrder.value } })
+        }
+    }
+    else {
+        emit('updated', { sort: { sortBy: sortOption, sortOrder: sortOrder.value } })
+    }
+}
+
 watch(selectedSort, (value) => {
-    emit('updated', { sort: { sortBy: value, sortOrder: sortOrder.value } })
+    gettingLocation(value)
 })
 
 </script>

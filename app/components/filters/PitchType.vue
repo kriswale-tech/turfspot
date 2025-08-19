@@ -5,9 +5,9 @@
 
         <div class="flex gap-2 flex-wrap">
             <template v-for="option in options" :key="option.id">
-                <div class="flex items-center gap-2 rounded p-1 px-3 lg:px-5 lg:py-2 bg-light cursor-pointer text-sm hover:bg-primary hover:text-white transition-colors duration-300"
-                    :class="{ 'bg-primary text-white': selectedPitchType === option.query }"
-                    @click="selectedPitchType = option.query">
+                <div class="flex items-center gap-2 rounded p-1 px-3 lg:px-5 lg:py-2 bg-light cursor-pointer text-sm hover:bg-primary/50 hover:text-white transition-colors duration-300 active:bg-primary active:text-white"
+                    :class="{ '!bg-primary text-white': selectedPitchType.includes(option.query) }"
+                    @click="togglePitchType(option.query)">
                     <p class="whitespace-nowrap">{{ option.title }}</p>
                 </div>
             </template>
@@ -49,11 +49,26 @@ const options = [
     },
 ]
 
-const selectedPitchType = ref<string | null>(null)
+const selectedPitchType = ref<string[]>([])
 
-watch(selectedPitchType, (value) => {
-    emit('updated', { pitchType: value })
-})
+watch(
+    selectedPitchType,
+    (value) => {
+        emit('updated', { pitchTypes: value })
+        console.log(value)
+    },
+    { deep: true }
+)
+
+function togglePitchType(query: string) {
+    if (selectedPitchType.value.includes(query)) {
+        selectedPitchType.value = selectedPitchType.value.filter(q => q !== query)
+    } else {
+        selectedPitchType.value = [...selectedPitchType.value, query]
+    }
+    console.log(selectedPitchType.value)
+}
+
 </script>
 
 <style scoped></style>

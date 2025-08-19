@@ -87,6 +87,7 @@ const singleFilter = ref<SingleFilter | null>(null)
 
 const route = useRoute()
 const router = useRouter()
+const { getLocation } = useUserGeolocation()
 
 function handleScroll() {
     if (!stickySection.value) return
@@ -154,11 +155,13 @@ watch(
     { immediate: true }
 )
 
-onMounted(() => {
+onMounted(async () => {
     // hideHeader.value = route.hash === '#find'
     handleScroll()
     window.addEventListener('scroll', handleScrollThrottled, { passive: true })
     window.addEventListener('resize', handleScrollThrottled, { passive: true })
+    const location = await getLocation()
+    console.log(location)
 })
 
 onUnmounted(() => {

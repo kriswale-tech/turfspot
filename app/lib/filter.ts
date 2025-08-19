@@ -26,12 +26,12 @@ export const filterItems: FilterItem[] = [
     icon: "hugeicons:money-01",
     filter: "price-per-hour",
   },
-  {
-    id: 4,
-    title: "Availability",
-    icon: "material-symbols:schedule-outline",
-    filter: "availability",
-  },
+  // {
+  //   id: 4,
+  //   title: "Availability",
+  //   icon: "material-symbols:schedule-outline",
+  //   filter: "availability",
+  // },
   {
     id: 5,
     title: "Purpose",
