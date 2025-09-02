@@ -11,16 +11,10 @@ type LocationCoordinates = {
   timestamp: number;
 };
 
-type LocationFailure = {
-  code: number | null;
-  name: string;
-  message: string;
-};
-
 type GetLocationResult = {
   success: boolean;
   coords?: LocationCoordinates;
-  error?: LocationFailure;
+  error?: string;
   permission: GeolocationPermission;
 };
 
@@ -50,34 +44,6 @@ async function queryGeolocationPermission(): Promise<GeolocationPermission> {
     cachedPermissionState = "unknown";
     return cachedPermissionState;
   }
-}
-
-function toFriendlyError(
-  error: GeolocationPositionError | Error
-): LocationFailure {
-  if ("code" in error) {
-    const code = error.code;
-    let message = "";
-    switch (code) {
-      case error.PERMISSION_DENIED:
-        message =
-          "Location permission denied. Enable location access in your browser settings and try again.";
-        break;
-      case error.POSITION_UNAVAILABLE:
-        message =
-          "Location information is unavailable. Check your network/GPS and ensure you have a clear signal.";
-        break;
-      case error.TIMEOUT:
-        message =
-          "Location request timed out. Try again from an open area with better signal.";
-        break;
-      default:
-        message = "An unknown error occurred while fetching your location.";
-    }
-    return { code, name: "GeolocationPositionError", message };
-  }
-
-  return { code: null, name: error.name || "Error", message: error.message };
 }
 
 function readCoordinates(position: GeolocationPosition): LocationCoordinates {
@@ -113,11 +79,7 @@ export function useUserGeolocation() {
     if (typeof window === "undefined") {
       return {
         success: false,
-        error: {
-          code: null,
-          name: "SSRUnsupported",
-          message: "Geolocation is only available in the browser.",
-        },
+        error: "Geolocation is only available in the browser.",
         permission: "unknown",
       };
     }
@@ -125,34 +87,14 @@ export function useUserGeolocation() {
     if (!("geolocation" in navigator)) {
       return {
         success: false,
-        error: {
-          code: null,
-          name: "GeolocationUnsupported",
-          message: "Your browser does not support geolocation.",
-        },
+        error: "Your browser does not support geolocation.",
         permission: "unknown",
-      };
-    }
-
-    let permission: GeolocationPermission = await queryGeolocationPermission();
-
-    if (permission === "denied") {
-      return {
-        success: false,
-        error: {
-          code: GeolocationPositionError.PERMISSION_DENIED,
-          name: "GeolocationPermissionDenied",
-          message:
-            "Location permission is denied. Please enable location access for this site in your browser settings.",
-        },
-        permission,
       };
     }
 
     return new Promise<GetLocationResult>((resolve) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          // Permission is implicitly granted or allowed for this call
           cachedPermissionState = "granted";
           resolve({
             success: true,
@@ -161,22 +103,28 @@ export function useUserGeolocation() {
           });
         },
         (err) => {
-          // If user dismisses or denies at prompt, surface a friendly error
-          const failure = toFriendlyError(err);
-          // Update cached permission when possible
+          let errorMessage =
+            "An unknown error occurred while fetching your location.";
           if (err.code === err.PERMISSION_DENIED) {
             cachedPermissionState = "denied";
-            permission = "denied";
+            errorMessage =
+              "Location permission denied. Enable location access in your browser settings and try again.";
+          } else if (err.code === err.POSITION_UNAVAILABLE) {
+            errorMessage =
+              "Location information is unavailable. Check your network/GPS and ensure you have a clear signal.";
+          } else if (err.code === err.TIMEOUT) {
+            errorMessage =
+              "Location request timed out. Try again from an open area with better signal.";
           }
-          resolve({ success: false, error: failure, permission });
+          resolve({
+            success: false,
+            error: errorMessage,
+            permission: cachedPermissionState || "unknown",
+          });
         },
         options
       );
     });
-  };
-
-  const checkPermission = async (): Promise<GeolocationPermission> => {
-    return queryGeolocationPermission();
   };
 
   const requestPermission = async (
@@ -214,5 +162,5 @@ export function useUserGeolocation() {
     });
   };
 
-  return { getLocation, checkPermission, requestPermission };
+  return { getLocation, requestPermission };
 }
