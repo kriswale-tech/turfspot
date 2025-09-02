@@ -19,5 +19,12 @@ export default defineNuxtConfig({
     },
   },
 
+  //runtime config
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL,
+    },
+  },
+
   modules: ["@nuxt/icon", "@nuxt/eslint", "@nuxt/image", "@nuxt/fonts"],
 });
