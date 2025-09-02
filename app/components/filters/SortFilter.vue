@@ -43,7 +43,7 @@ const props = defineProps<{
 }>()
 
 const { hideTitle } = toRefs(props)
-const { getLocation } = useUserGeolocation()
+const { getLocation, requestPermission } = useUserGeolocation()
 
 
 const options = [
@@ -73,14 +73,42 @@ const sortOrder = ref<'asc' | 'desc'>('asc')
 
 async function gettingLocation(sortOption: string | null) {
     if (sortOption === 'closest') {
-        const location = await getLocation()
-        console.log(location)
-        if (location.success) {
-            emit('updated', { sort: { sortBy: sortOption, sortOrder: sortOrder.value } })
-            console.log(location.coords?.latitude, location.coords?.longitude)
+        try {
+            // Request permission - this will always trigger browser prompt
+            const permission = await requestPermission()
+
+            if (permission === 'granted') {
+                // Permission granted, now get the actual location
+                const location = await getLocation()
+                console.log(location)
+                if (location.success) {
+                    emit('updated', { sort: { sortBy: sortOption, sortOrder: sortOrder.value } })
+                    console.log(location.coords?.latitude, location.coords?.longitude)
+                }
+                else {
+                    // If getting location failed after permission granted, show error and fallback to alphabetical
+                    alert('Unable to get your location. Please check your GPS/network connection and try again.')
+                    selectedSort.value = 'alphabetical'
+                    emit('updated', { sort: { sortBy: 'alphabetical', sortOrder: sortOrder.value } })
+                }
+            }
+            else if (permission === 'denied') {
+                // Permission denied, fallback to alphabetical
+                alert('Location permission denied, please enable location permission in your browser settings to sort by closest')
+                selectedSort.value = 'alphabetical'
+                emit('updated', { sort: { sortBy: 'alphabetical', sortOrder: sortOrder.value } })
+            }
+            else {
+                // Unknown or unsupported geolocation
+                alert('Location services are not available on this device or browser. Please try a different sorting option.')
+                selectedSort.value = 'alphabetical'
+                emit('updated', { sort: { sortBy: 'alphabetical', sortOrder: sortOrder.value } })
+            }
         }
-        else {
-            alert('Location permission denied, please enable location permission in your browser settings to sort by closest')
+        catch (error) {
+            // Handle any unexpected errors
+            console.error('Error requesting location permission:', error)
+            alert('An error occurred while trying to access your location. Please try again or use a different sorting option.')
             selectedSort.value = 'alphabetical'
             emit('updated', { sort: { sortBy: 'alphabetical', sortOrder: sortOrder.value } })
         }
