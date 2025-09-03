@@ -6,7 +6,7 @@ export interface Pitch {
   name: string;
   location: string;
   price_per_hour: number;
-  pitchType: string;
+  pitch_type: string;
   amenities: string[];
   availability: string[];
   image: string;

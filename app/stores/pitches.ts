@@ -1,19 +1,14 @@
 import type { Pitch, PitchFilters } from "~/types/pitch";
 
-export function usePitches() {
+export const usePitchesStore = defineStore("pitches", () => {
   const baseUrl = useRuntimeConfig().public.apiUrl;
-  console.log(baseUrl);
   const pitches = ref<Pitch[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  /**
-   * Fetch pitches from API with filters
-   */
   const fetchPitches = async (filters: PitchFilters = {}) => {
     isLoading.value = true;
     error.value = null;
-    console.log("lskdjflskjdlfksjlkdjflksjdf");
 
     try {
       const query = new URLSearchParams();
@@ -31,13 +26,9 @@ export function usePitches() {
       }
 
       console.log(`${baseUrl}/turfs?${query.toString()}`);
-      const { data } = await useFetch<Pitch[]>(
+      pitches.value = await $fetch<Pitch[]>(
         `${baseUrl}/turfs?${query.toString()}`
       );
-
-      if (data.value) {
-        pitches.value = data.value;
-      }
     } catch (err: unknown) {
       error.value =
         err instanceof Error ? err.message : "Failed to fetch pitches";
@@ -46,10 +37,5 @@ export function usePitches() {
     }
   };
 
-  return {
-    pitches,
-    isLoading,
-    error,
-    fetchPitches,
-  };
-}
+  return { pitches, isLoading, error, fetchPitches };
+});

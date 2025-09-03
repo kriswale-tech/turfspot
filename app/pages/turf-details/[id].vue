@@ -33,7 +33,9 @@
 </template>
 
 <script setup lang="ts">
-
+const route = useRoute();
+const { data } = await useFetch(`${useRuntimeConfig().public.apiUrl}/turfs/${route.params.id}`);
+console.log(data.value);
 </script>
 
 <style scoped></style>

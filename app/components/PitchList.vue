@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isLoading">
+    <div v-if="isLoading && pitches.length === 0">
         <PitchListSkeleton />
     </div>
     <div v-else-if="pitches.length === 0">
@@ -15,10 +15,13 @@
 </template>
 
 <script setup lang="ts">
-const { pitches, isLoading, fetchPitches } = usePitches();
+const { pitches, isLoading } = storeToRefs(usePitchesStore());
+const { fetchPitches } = usePitchesStore();
+// const { pitches, isLoading, fetchPitches } = usePitches();
+
 
 onMounted(async () => {
-    await fetchPitches();
+    await callOnce('pitches', () => fetchPitches());
 });
 
 // const pitches = [

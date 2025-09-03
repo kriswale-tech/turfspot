@@ -1,5 +1,6 @@
 <template>
     <div class="font-poppins bg-app-bg">
+        <NuxtLoadingIndicator />
         <div class="flex">
             <!-- Side component - fixed on left for screens > 1024px -->
             <div
