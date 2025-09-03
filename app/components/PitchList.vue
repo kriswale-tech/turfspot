@@ -5,7 +5,7 @@
     <div v-else-if="pitches.length === 0">
         <UiNoPitchesFound @refresh="fetchPitches" />
     </div>
-    <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         <template v-for="pitch in pitches" :key="pitch.id">
             <NuxtLink :to="`/turf-details/${pitch.id}`">
                 <PitchCard :card="pitch" />
