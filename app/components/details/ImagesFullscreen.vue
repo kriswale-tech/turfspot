@@ -13,7 +13,7 @@
             <!-- Image container -->
             <div class="relative flex-1 flex items-center justify-center select-none" @touchstart="onTouchStart"
                 @touchmove="onTouchMove" @touchend="onTouchEnd">
-                <img v-if="currentImage" :src="currentImage.url" alt="fullscreen"
+                <img v-if="currentImage" :src="currentImage.image" alt="fullscreen"
                     class="max-w-full max-h-full object-contain" draggable="false" />
 
                 <!-- Left/Right arrows (hidden on very small screens until tap) -->
@@ -33,12 +33,11 @@
 </template>
 
 <script setup lang="ts">
-
-interface ImageItem { id: number | string; url: string }
+import type { PitchImage } from '~/types/pitch';
 
 const props = defineProps<{
     modelValue: boolean
-    images: ImageItem[]
+    images: PitchImage[]
     startIndex?: number
 }>()
 

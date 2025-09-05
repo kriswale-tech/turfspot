@@ -4,20 +4,16 @@
         <div v-for="image in images" :key="image.id"
             class="w-12 h-10 lg:h-12 lg:w-14 rounded-md overflow-hidden cursor-pointer shrink-0"
             :class="{ 'outline-4 outline-primary': activeImage === image.id }" @click="handleActiveImage(image.id)">
-            <NuxtImg :src="image.url" alt="pitch-details" class="w-full h-full object-cover" />
+            <NuxtImg :src="image.image" alt="pitch-details" class="w-full h-full object-cover" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-
-interface Image {
-    id: number,
-    url: string,
-}
+import type { PitchImage } from '~/types/pitch';
 
 const props = defineProps<{
-    images: Image[],
+    images: PitchImage[],
 }>()
 
 const emit = defineEmits<{
