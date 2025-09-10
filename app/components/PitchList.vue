@@ -3,7 +3,7 @@
         <PitchListSkeleton :count="20" />
     </div>
     <div v-else-if="pitches.length === 0">
-        <UiNoPitchesFound @refresh="fetchPitches" />
+        <UiNoPitchesFound @refresh="fetchPitches" @clear-filters="clearFilters" />
     </div>
     <div v-else class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
         <template v-for="pitch in pitches" :key="pitch.id">
@@ -15,9 +15,15 @@
 </template>
 
 <script setup lang="ts">
-const { pitches, isLoading } = storeToRefs(usePitchesStore());
+const { pitches, isLoading, pitchFilters } = storeToRefs(usePitchesStore());
 const { fetchPitches } = usePitchesStore();
 // const { pitches, isLoading, fetchPitches } = usePitches();
+const router = useRouter()
+async function clearFilters() {
+    pitchFilters.value = {}
+    router.push({ path: '/' })
+    await fetchPitches(false)
+}
 
 
 onMounted(async () => {

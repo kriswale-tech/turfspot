@@ -5,17 +5,21 @@
 
         <!-- Options -->
         <div class="space-y-4">
-            <div class="flex gap-2 items-center justify-between" v-for="option in options" :key="option.id">
+            <div v-for="option in options" :key="option.id" class="flex gap-2 items-center justify-between">
                 <p class="text-sm text-primary">{{ option.title }}</p>
-                <UiRadioInput name="purpose" :value="option.value" v-model="selectedPurpose" />
+                <UiRadioInput v-model="selectedPurpose" name="purpose" :value="option.value" />
             </div>
         </div>
     </form>
 </template>
 
 <script setup lang="ts">
+import type { PitchFilterRecord } from '~/types/pitch';
+
+const { pitchFilters } = storeToRefs(usePitchesStore())
+
 const emit = defineEmits<{
-    (e: 'updated', value: Record<string, unknown>): void
+    (e: 'updated', value: PitchFilterRecord): void
 }>()
 
 const props = defineProps<{
@@ -42,10 +46,19 @@ const options = [
     },
 ]
 
-const selectedPurpose = ref<string | null>(null)
+const selectedPurpose = ref<string | null>(pitchFilters.value.purpose || null)
+
+// Watch for external changes to pitchFilters and sync local state
+watch(
+    () => pitchFilters.value.purpose,
+    (newPurpose) => {
+        selectedPurpose.value = newPurpose || null
+    },
+    { immediate: true }
+)
 
 watch(selectedPurpose, (value) => {
-    emit('updated', { purpose: value })
+    emit('updated', { purpose: value! })
 })
 
 </script>

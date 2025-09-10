@@ -18,12 +18,12 @@
                 leave-to-class="translate-y-full md:translate-y-0 md:opacity-0 md:scale-95">
                 <div v-if="modelValue"
                     class="bg-white w-full md:w-[700px] md:max-w-[700px] rounded-t-2xl md:rounded-3xl md:mx-auto md:my-auto overflow-hidden max-h-[95dvh] md:max-h-[90dvh] flex flex-col transform will-change-transform"
-                    @click.stop role="dialog" aria-modal="true">
+                    role="dialog" aria-modal="true" @click.stop>
                     <!-- Header -->
                     <div class="flex items-center justify-between px-4 py-3 shrink-0">
                         <button type="button"
                             class="p-2 rounded-full bg-light flex items-center justify-center cursor-pointer"
-                            @click="handleClose" aria-label="Close">
+                            aria-label="Close" @click="handleClose">
                             <Icon name="material-symbols:close-rounded" class="text-2xl" />
                         </button>
 
@@ -38,24 +38,25 @@
                     </div>
 
                     <!-- Content (divided sections) -->
-                    <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6" v-if="singleFilter">
+                    <form v-if="singleFilter" class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6">
+                        <!-- key is used to force re-render the component when the filter value changes -->
                         <!-- filter items -->
-                        <FiltersSortFilter @updated="handleUpdated" v-if="singleFilter === 'sort'" :hide-title="true" />
-                        <FiltersPitchType @updated="handleUpdated" v-if="singleFilter === 'pitch-type'"
-                            :hide-title="true" />
-                        <FiltersPricePerHour @updated="handleUpdated" v-if="singleFilter === 'price-per-hour'"
-                            :hide-title="true" />
+                        <FiltersSortFilter v-if="singleFilter === 'sort'" :hide-title="true" @updated="handleUpdated" />
+                        <FiltersPitchType v-if="singleFilter === 'pitch-type'" :hide-title="true"
+                            @updated="handleUpdated" />
+                        <FiltersPricePerHour v-if="singleFilter === 'price-per-hour'" :hide-title="true"
+                            @updated="handleUpdated" />
                         <!-- <FiltersAvailabilityFilter @updated="handleUpdated" v-if="singleFilter === 'availability'"
                             :hide-title="true" /> -->
-                        <FiltersPurposeFilter @updated="handleUpdated" v-if="singleFilter === 'purpose'"
-                            :hide-title="true" />
-                        <FiltersFacilitiesFilter @updated="handleUpdated" v-if="singleFilter === 'facilities'"
-                            :hide-title="true" />
+                        <FiltersPurposeFilter v-if="singleFilter === 'purpose'" :hide-title="true"
+                            @updated="handleUpdated" />
+                        <FiltersFacilitiesFilter v-if="singleFilter === 'amenities'" :hide-title="true"
+                            @updated="handleUpdated" />
 
                     </form>
 
                     <!-- Single Filter -->
-                    <form class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6" v-else>
+                    <form v-else class="divide-y divide-light flex-1 overflow-y-auto px-4 md:px-6">
                         <!-- filter items -->
                         <FiltersSortFilter @updated="handleUpdated" />
                         <FiltersPitchType @updated="handleUpdated" />
@@ -68,10 +69,11 @@
                     <!-- Footer -->
                     <div class="p-4  shrink-0">
                         <button type="button"
-                            class="w-full rounded-full bg-primary text-white py-3 font-medium hover:opacity-90 transition"
-                            :disabled="disabled" :class="{ '!bg-light !text-primary pointer-events-none': disabled }"
+                            class="w-full rounded-full h-12 flex items-center justify-center bg-primary text-white font-medium hover:opacity-90 transition"
+                            :disabled="isLoading" :class="{ '!bg-light !text-primary pointer-events-none': isLoading }"
                             @click="handleApply">
-                            Apply
+                            <Icon v-if="isLoading" name="line-md:loading-twotone-loop" class="text-2xl animate-spin" />
+                            <span v-else>Apply</span>
                         </button>
                     </div>
                 </div>
@@ -81,7 +83,10 @@
 </template>
 
 <script setup lang="ts">
-import type { SingleFilter } from '~/types/filter';
+import type { SingleFilter, PitchFilterRecord } from '~/types/pitch';
+
+const router = useRouter()
+const { pitchFilters, isLoading, error } = storeToRefs(usePitchesStore())
 
 const props = defineProps({
     modelValue: { type: Boolean, default: false },
@@ -94,25 +99,61 @@ const emit = defineEmits<{
     (e: 'close' | 'reset' | 'apply'): void
 }>()
 
-const disabled = ref(true)
-const filters = ref<Record<string, unknown>>({})
+const filters = ref<PitchFilterRecord>({})
 
 function handleClose() {
     // emit('update:modelValue', false)
     emit('close')
 }
 
-function handleReset() {
-    emit('reset')
+async function handleReset() {
+    switch (props.singleFilter) {
+        case 'sort':
+            pitchFilters.value.sortBy = undefined
+            break
+        case 'pitch-type':
+            pitchFilters.value.pitchType = undefined
+            break
+        case 'price-per-hour':
+            pitchFilters.value.minPrice = undefined
+            pitchFilters.value.maxPrice = undefined
+            break
+        case 'purpose':
+            pitchFilters.value.purpose = undefined
+            break
+        case 'amenities':
+            pitchFilters.value.amenities = undefined
+            break
+        default:
+            pitchFilters.value = {}
+            break
+    }
+    filters.value = {}
+    console.log(pitchFilters.value)
+    await usePitchesStore().fetchPitches(false)
+    console.log(error.value)
+    if (!error.value) {
+        router.push({ hash: '#find', query: pitchFilters.value })
+        emit('close')
+    }
 }
 
-function handleUpdated(value: Record<string, unknown>) {
+function handleUpdated(value: PitchFilterRecord) {
     filters.value = { ...filters.value, ...value }
     console.log(filters.value)
 }
 
-function handleApply() {
-    emit('apply')
+async function handleApply() {
+    // console.log(formatQuery(pitchFilters.value).pureString)
+    console.log(filters.value)
+    console.log(pitchFilters.value)
+    pitchFilters.value = { ...pitchFilters.value, ...filters.value }
+    await usePitchesStore().fetchPitches(false)
+    console.log(error.value)
+    if (!error.value) {
+        router.push({ hash: '#find', query: pitchFilters.value })
+        emit('close')
+    }
 }
 
 // Simple background scroll prevention by toggling body overflow

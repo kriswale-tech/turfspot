@@ -1,6 +1,6 @@
 <template>
     <div class="card-shadow p-4 rounded-2xl">
-        <h1 class="text-lg lg:text-xl font-medium mb-4">Facilities</h1>
+        <h1 class="text-lg lg:text-xl font-medium mb-4">Amenities</h1>
 
         <div class="space-y-3">
             <!-- floodlights -->

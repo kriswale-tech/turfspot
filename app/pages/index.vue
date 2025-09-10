@@ -35,14 +35,15 @@
             :class="stickySectionBgClass">
             <div class="max-width">
                 <div class="mb-5 transition-all duration-300 lg:hidden" :class="logoVisibilityClass">
-                    <NuxtLink to="/">
+                    <NuxtLink :to="{ query: route.query }">
                         <AppLogo />
                     </NuxtLink>
                 </div>
 
                 <div class="flex justify-between gap-2 items-center lg:pt-5 ">
                     <SearchBar />
-                    <FilterIcon class="cursor-pointer" @click="filterOpen = true; $router.push('#find')" />
+                    <FilterIcon class="cursor-pointer"
+                        @click="filterOpen = true; $router.push({ hash: '#find', query: route.query })" />
                 </div>
 
                 <div class="my-5">
@@ -70,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SingleFilter } from '~/types/filter'
+import type { SingleFilter } from '~/types/pitch'
 import { filterItems } from '~/lib/filter'
 
 definePageMeta({
@@ -118,7 +119,7 @@ function handleScrollThrottled() {
 function showFilter(filter: string) {
     singleFilter.value = filter as SingleFilter
     console.log(singleFilter.value)
-    router.push('#find')
+    router.push({ hash: '#find', query: route.query })
     filterOpen.value = true
 }
 

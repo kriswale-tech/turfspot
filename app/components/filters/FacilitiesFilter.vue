@@ -5,17 +5,21 @@
 
         <!-- Options -->
         <div class="space-y-4">
-            <div class="flex gap-2 items-center justify-between" v-for="option in options" :key="option.id">
+            <div v-for="option in options" :key="option.id" class="flex gap-2 items-center justify-between">
                 <p class="text-sm text-primary">{{ option.title }}</p>
-                <UiCheckInput name="facilities" :value="option.value" v-model="selectedFacilities" />
+                <UiCheckInput v-model="selectedFacilities" name="facilities" :value="option.value" />
             </div>
         </div>
     </form>
 </template>
 
 <script setup lang="ts">
+import type { PitchFilterRecord } from '~/types/pitch';
+
+const { pitchFilters } = storeToRefs(usePitchesStore())
+
 const emit = defineEmits<{
-    (e: 'updated', value: Record<string, unknown>): void
+    (e: 'updated', value: PitchFilterRecord): void
 }>()
 
 const props = defineProps<{
@@ -47,11 +51,20 @@ const options = [
     }
 ]
 
-const selectedFacilities = ref<string[]>([])
+const selectedFacilities = ref<string[]>(pitchFilters.value.amenities || [])
+
+// Watch for external changes to pitchFilters and sync local state
+watch(
+    () => pitchFilters.value.amenities,
+    (newAmenities) => {
+        selectedFacilities.value = newAmenities || []
+    },
+    { immediate: true }
+)
 
 watch(selectedFacilities, (value) => {
     console.log(value)
-    emit('updated', { facilities: value })
+    emit('updated', { amenities: value })
 })
 
 </script>

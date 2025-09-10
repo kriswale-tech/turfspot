@@ -15,8 +15,12 @@
 </template>
 
 <script setup lang="ts">
+import type { PitchFilterRecord } from '~/types/pitch';
+
+const { pitchFilters } = storeToRefs(usePitchesStore())
+
 const emit = defineEmits<{
-    (e: 'updated', value: Record<string, unknown>): void
+    (e: 'updated', value: PitchFilterRecord): void
 }>()
 
 const props = defineProps<{
@@ -44,14 +48,32 @@ const options = [
     {
         id: 4,
         title: 'GHS 400+',
-        query: '400+',
+        query: '400',
     },
 ]
 
-const selectedPrice = ref<string | null>(null)
+const selectedPrice = ref<string | null>(pitchFilters.value.minPrice?.toString() + '-' + pitchFilters.value.maxPrice?.toString() || null)
+
+// Watch for external changes to pitchFilters and sync local state
+watch(
+    () => [pitchFilters.value.minPrice, pitchFilters.value.maxPrice],
+    ([minPrice, maxPrice]) => {
+        if (minPrice && maxPrice) {
+            selectedPrice.value = `${minPrice}-${maxPrice}`
+        } else {
+            selectedPrice.value = null
+        }
+    },
+    { immediate: true }
+)
 
 watch(selectedPrice, (value) => {
-    emit('updated', { pricePerHour: value })
+    if (value) {
+        const [min, max] = value.split('-')
+        emit('updated', { minPrice: Number(min), maxPrice: Number(max) })
+    } else {
+        emit('updated', { minPrice: undefined, maxPrice: undefined })
+    }
 })
 </script>
 

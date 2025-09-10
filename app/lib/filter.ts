@@ -1,4 +1,4 @@
-import type { SingleFilter } from "~/types/filter";
+import type { SingleFilter } from "~/types/pitch";
 
 export interface FilterItem {
   id: number;
@@ -40,8 +40,8 @@ export const filterItems: FilterItem[] = [
   },
   {
     id: 6,
-    title: "Facilities",
+    title: "Amenities",
     icon: "mdi:shower-head",
-    filter: "facilities",
+    filter: "amenities",
   },
 ];

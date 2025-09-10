@@ -1,7 +1,7 @@
 <template>
     <div class="flex gap-2 whitespace-nowrap  items-center">
         <Icon :name="icon" :class="iconClass" class="text-xl shrink-0" />
-        <p>{{ title }}</p>
+        <p class=""> {{ title.charAt(0).toUpperCase() + title.slice(1) }}</p>
     </div>
 </template>
 

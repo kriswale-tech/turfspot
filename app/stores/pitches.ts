@@ -6,30 +6,19 @@ export const usePitchesStore = defineStore("pitches", () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const pitchFilters = ref<PitchFilters>({});
+  const route = useRoute();
 
-  const fetchPitches = async (filters: PitchFilters = pitchFilters.value) => {
+  const fetchPitches = async (withRouteQuery: boolean = true) => {
     isLoading.value = true;
     error.value = null;
 
+    if (withRouteQuery) pitchFilters.value = route.query as PitchFilters;
+
     try {
-      const query = new URLSearchParams();
+      const { pureString } = formatQuery(pitchFilters.value);
 
-      if (filters.location) query.append("location", filters.location);
-      if (filters.minPrice)
-        query.append("min_price", filters.minPrice.toString());
-      if (filters.maxPrice)
-        query.append("max_price", filters.maxPrice.toString());
-      if (filters.pitchType) query.append("pitch_type", filters.pitchType);
-      if (filters.availability)
-        query.append("availability", filters.availability);
-      if (filters.amenities?.length) {
-        filters.amenities.forEach((a) => query.append("amenities", a));
-      }
-
-      console.log(`${baseUrl}/turfs?${query.toString()}`);
-      pitches.value = await $fetch<Pitch[]>(
-        `${baseUrl}/turfs?${query.toString()}`
-      );
+      console.log(`${baseUrl}/turfs${pureString}`);
+      pitches.value = await $fetch<Pitch[]>(`${baseUrl}/turfs${pureString}`);
     } catch (err: unknown) {
       error.value =
         err instanceof Error ? err.message : "Failed to fetch pitches";
@@ -37,6 +26,17 @@ export const usePitchesStore = defineStore("pitches", () => {
       isLoading.value = false;
     }
   };
+
+  // Watch for changes in pitchFilters and refetch pitches
+  watch(
+    () => pitchFilters.value,
+    (newFilters) => {
+      // fetchPitches(newFilters);
+      console.log(newFilters);
+      console.log("ldkjfslkjdflkjs");
+    },
+    { deep: true }
+  );
 
   return { pitches, isLoading, error, fetchPitches, pitchFilters };
 });

@@ -12,18 +12,6 @@ export interface Pitch {
   image: string;
 }
 
-/**
- * Define filters shape
- */
-export interface PitchFilters {
-  location?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  pitchType?: string;
-  amenities?: string[];
-  availability?: string;
-}
-
 export interface IdName {
   id: number;
   name: string;
@@ -65,3 +53,27 @@ export interface PitchDetail {
   images: PitchImage[];
   created_at: string; // ISO datetime string
 }
+
+/**
+ * Define filters shape
+ */
+export interface PitchFilters {
+  location?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  pitchType?: string;
+  amenities?: string[];
+  availability?: string;
+  purpose?: string;
+  sortBy?: string;
+}
+
+export type PitchFilterRecord = Partial<PitchFilters>;
+
+export type SingleFilter =
+  | "sort"
+  | "pitch-type"
+  | "amenities"
+  | "availability"
+  | "purpose"
+  | "price-per-hour";
