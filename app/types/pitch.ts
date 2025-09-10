@@ -24,24 +24,24 @@ export interface PitchFilters {
   availability?: string;
 }
 
-export interface PitchType {
+export interface IdName {
   id: number;
   name: string;
 }
 
-export interface GameTime {
-  id: number;
-  name: string;
-}
-
-export interface Purpose {
-  id: number;
-  name: string;
-}
-
+export type FacilityName =
+  | "Flood lights"
+  | "Changing rooms"
+  | "Parking space"
+  | "Showers";
 export interface Facility {
   id: number;
-  name: string;
+  name: FacilityName;
+}
+
+export interface IdNumber {
+  id: number;
+  number: string;
 }
 
 export interface PitchImage {
@@ -52,16 +52,16 @@ export interface PitchImage {
 export interface PitchDetail {
   id: number;
   name: string;
-  description?: string;
-  pitch_type: PitchType;
+  pitch_description: string;
+  pitch_type: IdName;
   price_per_hour: number;
-  game_time: GameTime;
-  purpose: Purpose;
+  game_time: string;
+  purposes: IdName[];
   facilities: Facility[];
   location: string;
   map_link: string;
-  whatsapp_number: string;
-  call_number: string;
+  whatsapp_numbers: IdNumber[];
+  call_numbers: IdNumber[];
   images: PitchImage[];
   created_at: string; // ISO datetime string
 }

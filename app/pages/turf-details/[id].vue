@@ -10,8 +10,8 @@
                 <DetailsMainDetails :pitch="pitch" />
                 <DetailsLocationDetails :location-details="{ location: pitch.location, map_link: pitch.map_link }" />
                 <DetailsContactDetails
-                    :contact-details="{ call_number: pitch.call_number, whatsapp_number: pitch.whatsapp_number }" />
-                <DetailsFacilitiesDetails />
+                    :contact-details="{ call_numbers: pitch.call_numbers, whatsapp_numbers: pitch.whatsapp_numbers }" />
+                <DetailsFacilitiesDetails :facilities="pitch.facilities" />
             </div>
         </div>
 
@@ -24,13 +24,13 @@
                 <div class=" w-3/5 space-y-6">
                     <DetailsImageComponent :images="pitch.images" />
                     <DetailsMainDetails :pitch="pitch" />
-                    <DetailsFacilitiesDetails />
+                    <DetailsFacilitiesDetails :facilities="pitch.facilities" />
                 </div>
                 <div class="w-2/5 space-y-6">
                     <DetailsLocationDetails
                         :location-details="{ location: pitch.location, map_link: pitch.map_link }" />
                     <DetailsContactDetails
-                        :contact-details="{ call_number: pitch.call_number, whatsapp_number: pitch.whatsapp_number }" />
+                        :contact-details="{ call_numbers: pitch.call_numbers, whatsapp_numbers: pitch.whatsapp_numbers }" />
                 </div>
             </div>
         </div>

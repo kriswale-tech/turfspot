@@ -1,6 +1,6 @@
 <template>
     <div v-if="isLoading && pitches.length === 0">
-        <PitchListSkeleton />
+        <PitchListSkeleton :count="20" />
     </div>
     <div v-else-if="pitches.length === 0">
         <UiNoPitchesFound @refresh="fetchPitches" />

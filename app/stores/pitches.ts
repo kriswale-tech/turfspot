@@ -5,8 +5,9 @@ export const usePitchesStore = defineStore("pitches", () => {
   const pitches = ref<Pitch[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const pitchFilters = ref<PitchFilters>({});
 
-  const fetchPitches = async (filters: PitchFilters = {}) => {
+  const fetchPitches = async (filters: PitchFilters = pitchFilters.value) => {
     isLoading.value = true;
     error.value = null;
 
@@ -37,5 +38,5 @@ export const usePitchesStore = defineStore("pitches", () => {
     }
   };
 
-  return { pitches, isLoading, error, fetchPitches };
+  return { pitches, isLoading, error, fetchPitches, pitchFilters };
 });

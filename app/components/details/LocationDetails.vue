@@ -17,17 +17,17 @@
             </div>
 
             <!-- map -->
-            <div class="">
+            <!-- <div class="" v-if="locationDetails.map_link">
                 <iframe class="w-full aspect-video border-2 border-primary/20 rounded-lg"
                     :src="locationDetails.map_link" :allowfullscreen="true" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
+            </div> -->
         </div>
 
         <!-- buttons -->
-        <div class="">
+        <div class="" v-if="locationDetails.map_link">
             <UiButtonComponent>
-                <NuxtLink :to="locationDetails.map_link" class="flex items-center gap-2">
+                <NuxtLink :to="locationDetails.map_link" class="flex items-center gap-2" target="_blank">
                     <Icon name="hugeicons:maps-location-01" class="text-2xl shrink-0" />
                     <span>View Map</span>
                 </NuxtLink>

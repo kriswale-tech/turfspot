@@ -90,7 +90,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-    (e: 'update:modelValue', value: boolean): void
+    // (e: 'update:modelValue', value: boolean): void
     (e: 'close' | 'reset' | 'apply'): void
 }>()
 
@@ -98,7 +98,7 @@ const disabled = ref(true)
 const filters = ref<Record<string, unknown>>({})
 
 function handleClose() {
-    emit('update:modelValue', false)
+    // emit('update:modelValue', false)
     emit('close')
 }
 
