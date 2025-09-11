@@ -22,8 +22,8 @@ export const usePitchesStore = defineStore("pitches", () => {
       const { pureString } = formatQuery(pitchFilters.value);
       console.log(pureString);
 
-      console.log(`${baseUrl}/tsdfurfss${pureString}`);
-      pitches.value = await $fetch<Pitch[]>(`${baseUrl}/turfss${pureString}`);
+      console.log(`${baseUrl}/turfs${pureString}`);
+      pitches.value = await $fetch<Pitch[]>(`${baseUrl}/turfs${pureString}`);
     } catch (err: unknown) {
       error.value =
         err instanceof Error ? err.message : "Failed to fetch pitches";
