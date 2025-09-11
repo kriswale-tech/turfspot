@@ -52,27 +52,29 @@ const options = [
     },
 ]
 
-const selectedPrice = ref<string | null>(pitchFilters.value.minPrice?.toString() + '-' + pitchFilters.value.maxPrice?.toString() || null)
+const selectedPrice = ref<string | null>(pitchFilters.value.price_per_hour_min?.toString() + (pitchFilters.value.price_per_hour_max ? '-' : '') + pitchFilters.value.price_per_hour_max?.toString())
 
 // Watch for external changes to pitchFilters and sync local state
 watch(
-    () => [pitchFilters.value.minPrice, pitchFilters.value.maxPrice],
+    () => [pitchFilters.value.price_per_hour_min, pitchFilters.value.price_per_hour_max],
     ([minPrice, maxPrice]) => {
-        if (minPrice && maxPrice) {
-            selectedPrice.value = `${minPrice}-${maxPrice}`
+        if (minPrice) {
+            selectedPrice.value = `${minPrice}${maxPrice ? '-' + maxPrice : ''}`
         } else {
             selectedPrice.value = null
         }
+        console.log(selectedPrice.value)
     },
     { immediate: true }
+
 )
 
 watch(selectedPrice, (value) => {
     if (value) {
         const [min, max] = value.split('-')
-        emit('updated', { minPrice: Number(min), maxPrice: Number(max) })
+        emit('updated', { price_per_hour_min: Number(min), price_per_hour_max: max ? Number(max) : undefined })
     } else {
-        emit('updated', { minPrice: undefined, maxPrice: undefined })
+        emit('updated', { price_per_hour_min: undefined, price_per_hour_max: undefined })
     }
 })
 </script>

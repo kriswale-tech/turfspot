@@ -32,8 +32,10 @@
                         </div>
 
                         <button type="button" class="text-primary text-sm font-medium hover:underline"
-                            @click="handleReset">
-                            Reset
+                            @click="handleReset" :disabled="isLoading">
+
+                            <Icon v-if="isLoading" name="line-md:loading-twotone-loop" class="text-2xl animate-spin" />
+                            <span v-else>Reset</span>
                         </button>
                     </div>
 
@@ -106,23 +108,24 @@ function handleClose() {
     emit('close')
 }
 
+//resets filter values to the pitchFilters store
 async function handleReset() {
     switch (props.singleFilter) {
         case 'sort':
-            pitchFilters.value.sortBy = undefined
+            pitchFilters.value.ordering = undefined
             break
         case 'pitch-type':
-            pitchFilters.value.pitchType = undefined
+            pitchFilters.value.pitch_type = undefined
             break
         case 'price-per-hour':
-            pitchFilters.value.minPrice = undefined
-            pitchFilters.value.maxPrice = undefined
+            pitchFilters.value.price_per_hour_min = undefined
+            pitchFilters.value.price_per_hour_max = undefined
             break
         case 'purpose':
-            pitchFilters.value.purpose = undefined
+            pitchFilters.value.purposes = undefined
             break
         case 'amenities':
-            pitchFilters.value.amenities = undefined
+            pitchFilters.value.facilities = undefined
             break
         default:
             pitchFilters.value = {}
@@ -138,11 +141,13 @@ async function handleReset() {
     }
 }
 
+//captures filter values in this component
 function handleUpdated(value: PitchFilterRecord) {
     filters.value = { ...filters.value, ...value }
     console.log(filters.value)
 }
 
+//applies filter values to the pitchFilters store and fetches pitches
 async function handleApply() {
     // console.log(formatQuery(pitchFilters.value).pureString)
     console.log(filters.value)
@@ -156,6 +161,7 @@ async function handleApply() {
     }
 }
 
+// Ui Stuff
 // Simple background scroll prevention by toggling body overflow
 let previousOverflow: string | null = null
 

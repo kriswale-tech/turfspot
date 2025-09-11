@@ -15,9 +15,11 @@ export function formatQuery(filters: PitchFilters) {
       if (Array.isArray(value)) {
         // For array values (amenities, pitchType), join with commas
         if (value.length > 0) {
-          const arrayValue = value.join(",");
+          const arrayValue = value
+            .map((item) => String(key) + "=" + String(item))
+            .join("&");
           params.append(key, arrayValue);
-          pureParams.push(`${key}=${arrayValue}`);
+          pureParams.push(arrayValue);
         }
       } else {
         // For primitive values, convert to string and add

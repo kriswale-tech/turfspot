@@ -57,15 +57,20 @@ export interface PitchDetail {
 /**
  * Define filters shape
  */
+export type Ordering =
+  | "price_per_hour"
+  | "name"
+  | "location"
+  | "-price_per_hour"
+  | "-name"
+  | "-location";
 export interface PitchFilters {
-  location?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  pitchType?: string;
-  amenities?: string[];
-  availability?: string;
-  purpose?: string;
-  sortBy?: string;
+  price_per_hour_min?: number;
+  price_per_hour_max?: number;
+  pitch_type?: number;
+  facilities?: number[];
+  purposes?: number;
+  ordering?: Ordering;
 }
 
 export type PitchFilterRecord = Partial<PitchFilters>;

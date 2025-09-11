@@ -19,9 +19,10 @@ const { pitches, isLoading, pitchFilters } = storeToRefs(usePitchesStore());
 const { fetchPitches } = usePitchesStore();
 // const { pitches, isLoading, fetchPitches } = usePitches();
 const router = useRouter()
+const route = useRoute()
 async function clearFilters() {
     pitchFilters.value = {}
-    router.push({ path: '/' })
+    router.push({ path: route.path, hash: route.hash, query: pitchFilters.value })
     await fetchPitches(false)
 }
 

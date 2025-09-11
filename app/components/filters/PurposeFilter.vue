@@ -2,9 +2,20 @@
     <form class="py-4">
         <UiFilterTitle v-if="!hideTitle" title="Purpose" icon="mdi:soccer-field" class="font-semibold mb-6" />
 
+        <!-- Loading State -->
+        <div v-if="isLoading" class="space-y-4">
+            <div v-for="i in 3" :key="i" class="flex gap-2 items-center justify-between">
+                <div class="h-4 bg-gray-200 rounded animate-pulse" :class="[
+                    i === 1 ? 'w-16' : '',
+                    i === 2 ? 'w-24' : '',
+                    i === 3 ? 'w-12' : ''
+                ]" />
+                <div class="w-4 h-4 bg-gray-200 rounded-full animate-pulse" />
+            </div>
+        </div>
 
-        <!-- Options -->
-        <div class="space-y-4">
+        <!-- Content State -->
+        <div v-else class="space-y-4">
             <div v-for="option in options" :key="option.id" class="flex gap-2 items-center justify-between">
                 <p class="text-sm text-primary">{{ option.title }}</p>
                 <UiRadioInput v-model="selectedPurpose" name="purpose" :value="option.value" />
@@ -16,7 +27,7 @@
 <script setup lang="ts">
 import type { PitchFilterRecord } from '~/types/pitch';
 
-const { pitchFilters } = storeToRefs(usePitchesStore())
+const { pitchFilters, purposes, isLoading } = storeToRefs(usePitchesStore())
 
 const emit = defineEmits<{
     (e: 'updated', value: PitchFilterRecord): void
@@ -28,29 +39,17 @@ const props = defineProps<{
 
 const { hideTitle } = toRefs(props)
 
-const options = [
-    {
-        id: 1,
-        title: 'Match',
-        value: 'match'
-    },
-    {
-        id: 2,
-        title: 'Training Session',
-        value: 'training-session'
-    },
-    {
-        id: 3,
-        title: 'Events',
-        value: 'events'
-    },
-]
+const options = computed(() => purposes.value.map(purpose => ({
+    id: purpose.id,
+    title: purpose.name,
+    value: purpose.id
+})))
 
-const selectedPurpose = ref<string | null>(pitchFilters.value.purpose || null)
+const selectedPurpose = ref<number | null>(pitchFilters.value.purposes || null)
 
 // Watch for external changes to pitchFilters and sync local state
 watch(
-    () => pitchFilters.value.purpose,
+    () => pitchFilters.value.purposes,
     (newPurpose) => {
         selectedPurpose.value = newPurpose || null
     },
@@ -58,8 +57,13 @@ watch(
 )
 
 watch(selectedPurpose, (value) => {
-    emit('updated', { purpose: value! })
+    emit('updated', { purposes: value! })
 })
+
+onMounted(async () => {
+    await callOnce('purposes', () => usePitchesStore().fetchPurposes())
+})
+
 
 </script>
 

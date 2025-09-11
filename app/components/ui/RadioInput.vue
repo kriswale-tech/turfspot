@@ -13,16 +13,16 @@
 <script setup lang="ts">
 const props = defineProps<{
     name: string
-    value: string
-    modelValue: string | boolean | null
+    value: number | string
+    modelValue: number | boolean | null | string
 }>()
 
 const emit = defineEmits<{
-    (e: 'update:modelValue', value: string | boolean | null): void
+    (e: 'update:modelValue', value: number | boolean | null | string): void
 }>()
 
 const model = computed({
     get: () => props.modelValue,
-    set: (val: string | boolean | null) => emit('update:modelValue', val)
+    set: (val: number | boolean | null | string) => emit('update:modelValue', val)
 })
 </script>

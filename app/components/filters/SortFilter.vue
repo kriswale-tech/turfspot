@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PitchFilterRecord } from '~/types/pitch';
+import type { Ordering, PitchFilterRecord } from '~/types/pitch';
 
 const { pitchFilters } = storeToRefs(usePitchesStore())
 
@@ -47,51 +47,67 @@ const props = defineProps<{
 }>()
 
 const { hideTitle } = toRefs(props)
-const { getLocation, requestPermission } = useUserGeolocation()
+// const { getLocation, requestPermission } = useUserGeolocation()
 
 
-const options = [
+const options: { id: number, title: string, name: string, value: Ordering }[] = [
     {
         id: 1,
-        title: 'Alphabetical',
+        title: 'Name',
         name: 'sort',
-        value: 'alphabetical'
+        value: 'name'
     },
     {
         id: 2,
-        title: 'Closest',
+        title: 'Location',
         name: 'sort',
-        value: 'closest'
+        value: 'location'
     },
     {
         id: 3,
-        title: 'Cheapest',
+        title: 'Price',
         name: 'sort',
-        value: 'cheapest'
+        value: 'price_per_hour'
     },
 
 ]
 
-const selectedSort = ref<string>(pitchFilters.value.sortBy?.split(';')[0] || 'alphabetical')
-const sortOrder = ref<'asc' | 'desc'>(pitchFilters.value.sortBy?.split(';')[1] as 'asc' | 'desc' || 'asc')
+const selectedSort = ref<string>(pitchFilters.value.ordering?.at(0) === '-' ? pitchFilters.value.ordering?.slice(1) : pitchFilters.value.ordering || 'name')
+const sortOrder = ref<'asc' | 'desc'>(pitchFilters.value.ordering?.at(0) === '-' ? 'desc' : 'asc')
 
 // Watch for external changes to pitchFilters and sync local state
 watch(
-    () => pitchFilters.value.sortBy,
-    (newSortBy) => {
-        if (newSortBy) {
-            const [sort, order] = newSortBy.split(';')
-            selectedSort.value = sort || 'alphabetical'
-            sortOrder.value = (order as 'asc' | 'desc') || 'asc'
+    () => pitchFilters.value.ordering,
+    (newOrdering) => {
+        if (newOrdering) {
+            selectedSort.value = newOrdering.at(0) === '-' ? newOrdering.slice(1) : newOrdering
+            sortOrder.value = newOrdering.at(0) === '-' ? 'desc' : 'asc'
         } else {
-            selectedSort.value = 'alphabetical'
+            selectedSort.value = 'name'
             sortOrder.value = 'asc'
         }
     },
     { immediate: true }
 )
 
-async function updateSort(sortOption: string | null) {
+watch([selectedSort, sortOrder], ([value, order]) => {
+    emit('updated', { ordering: order === 'desc' ? '-' + value as Ordering : value as Ordering })
+})
+
+</script>
+
+<style scoped></style>
+
+
+
+
+
+
+
+
+
+
+<!-- async function updateSort(sortOption: string | null) {
     if (sortOption === 'closest') {
         try {
             // Request permission - this will always trigger browser prompt
@@ -136,12 +152,4 @@ async function updateSort(sortOption: string | null) {
     else {
         emit('updated', { sortBy: sortOption + ';' + sortOrder.value })
     }
-}
-
-watch([selectedSort, sortOrder], ([value]) => {
-    updateSort(value)
-})
-
-</script>
-
-<style scoped></style>
+} -->

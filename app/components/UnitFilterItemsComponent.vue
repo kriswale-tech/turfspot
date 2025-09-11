@@ -1,8 +1,8 @@
 <template>
     <div class="flex gap-2 overflow-x-auto hide-scrollbar p-1">
         <template v-for="item in filterItems" :key="item.id">
-            <UnitFilterItem :title="getFilterValue(item.filter, item.title)" :icon="item.icon" :filter="item.filter"
-                @show-filter="showFilter" :active="getFilterValue(item.filter, item.title) !== item.title" />
+            <UnitFilterItem :title="getFilterTitle(item.filter)" :icon="item.icon" :filter="item.filter"
+                :active="isFilterActive(item.filter)" @show-filter="showFilter" />
         </template>
     </div>
 </template>
@@ -16,7 +16,7 @@ const props = defineProps<{
 }>()
 
 const { filterItems } = toRefs(props)
-const { pitchFilters } = storeToRefs(usePitchesStore())
+const { pitchFilters, pitchTypes, purposes } = storeToRefs(usePitchesStore())
 
 const emit = defineEmits<{
     (e: 'showFilter', filter: string): void
@@ -26,36 +26,76 @@ function showFilter(filter: string) {
     emit('showFilter', filter)
 }
 
-
-function getFilterValue(filterType: SingleFilter, title: string): string {
+// Function to get the display title for each filter
+function getFilterTitle(filterType: SingleFilter): string {
     switch (filterType) {
         case 'sort':
-            return pitchFilters.value.sortBy?.split(';')[0] || title
+            if (pitchFilters.value.ordering) {
+                const sortField = pitchFilters.value.ordering.startsWith('-')
+                    ? pitchFilters.value.ordering.slice(1)
+                    : pitchFilters.value.ordering
+                const order = pitchFilters.value.ordering.startsWith('-') ? 'Desc' : 'Asc'
+
+                switch (sortField) {
+                    case 'name': return `Name (${order})`
+                    case 'location': return `Location (${order})`
+                    case 'price_per_hour': return `Price (${order})`
+                    default: return 'Sort'
+                }
+            }
+            return 'Sort'
 
         case 'pitch-type':
-
-            return pitchFilters.value.pitchType || title
-
-
-
-        case 'amenities':
-            if (Array.isArray(pitchFilters.value.amenities) && pitchFilters.value.amenities.length > 0) {
-                return `${title} (${pitchFilters.value.amenities.length})`
+            if (pitchFilters.value.pitch_type) {
+                const pitchType = pitchTypes.value.find(pt => pt.id === pitchFilters.value.pitch_type)
+                return pitchType ? pitchType.name : 'Pitch Type'
             }
-            return title
-
-        case 'purpose':
-            return pitchFilters.value.purpose || title
+            return 'Pitch Type'
 
         case 'price-per-hour':
-            if (pitchFilters.value.minPrice || pitchFilters.value.maxPrice) {
-                return `${pitchFilters.value.minPrice}-${pitchFilters.value.maxPrice}`
+            if (pitchFilters.value.price_per_hour_min || pitchFilters.value.price_per_hour_max) {
+                const min = pitchFilters.value.price_per_hour_min || 0
+                const max = pitchFilters.value.price_per_hour_max
+                return max ? `GHS ${min} - ${max}` : `GHS ${min}+`
             }
-            return title
+            return 'Price per Hour'
+
+        case 'purpose':
+            if (pitchFilters.value.purposes) {
+                const purpose = purposes.value.find(p => p.id === pitchFilters.value.purposes)
+                return purpose ? purpose.name : 'Purpose'
+            }
+            return 'Purpose'
+
+        case 'amenities':
+            if (pitchFilters.value.facilities && pitchFilters.value.facilities.length > 0) {
+                return `Amenities (${pitchFilters.value.facilities.length})`
+            }
+            return 'Amenities'
+
         default:
-            return title
+            return 'Filter'
     }
 }
+
+// Function to determine if a filter is active
+function isFilterActive(filterType: SingleFilter): boolean {
+    switch (filterType) {
+        case 'sort':
+            return !!pitchFilters.value.ordering
+        case 'pitch-type':
+            return !!pitchFilters.value.pitch_type
+        case 'price-per-hour':
+            return !!(pitchFilters.value.price_per_hour_min || pitchFilters.value.price_per_hour_max)
+        case 'purpose':
+            return !!pitchFilters.value.purposes
+        case 'amenities':
+            return !!(pitchFilters.value.facilities && pitchFilters.value.facilities.length > 0)
+        default:
+            return false
+    }
+}
+
 
 </script>
 
