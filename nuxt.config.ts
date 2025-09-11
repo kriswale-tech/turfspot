@@ -26,6 +26,11 @@ export default defineNuxtConfig({
     },
   },
 
+  // image optimization
+  image: {
+    domains: ["res.cloudinary.com"],
+  },
+
   modules: [
     "@nuxt/icon",
     "@nuxt/eslint",
