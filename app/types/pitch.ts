@@ -21,7 +21,7 @@ export type FacilityName =
   | "Flood lights"
   | "Changing rooms"
   | "Parking space"
-  | "Showers";
+  | "Washrooms";
 export interface Facility {
   id: number;
   name: FacilityName;

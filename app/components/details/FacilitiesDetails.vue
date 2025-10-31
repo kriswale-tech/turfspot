@@ -25,10 +25,10 @@
                 </div>
             </div>
             <!-- bathrooms -->
-            <div v-if="facilityNames.includes('Showers')" class="flex gap-3">
+            <div v-if="facilityNames.includes('Washrooms')" class="flex gap-3">
                 <Icon name="guidance:showers" class="text-xl lg:text-2xl text-primary shrink-0 " />
                 <div class="">
-                    <p class="text-sm lg:text-base">Showers</p>
+                    <p class="text-sm lg:text-base">Washrooms</p>
                 </div>
             </div>
         </div>

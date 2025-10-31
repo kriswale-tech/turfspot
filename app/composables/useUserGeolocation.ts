@@ -1,5 +1,7 @@
-type GeolocationPermission = "granted" | "prompt" | "denied" | "unknown";
+// Represents the browser's geolocation permission state.
+export type GeolocationPermission = "granted" | "prompt" | "denied" | "unknown";
 
+// Strongly-typed structure for geolocation coordinates and related metadata.
 type LocationCoordinates = {
   latitude: number;
   longitude: number;
@@ -11,15 +13,20 @@ type LocationCoordinates = {
   timestamp: number;
 };
 
-type GetLocationResult = {
+// Standardized result for any location attempt, including success state,
+// coordinates (if available), error description, and permission state.
+export type GetLocationResult = {
   success: boolean;
   coords?: LocationCoordinates;
   error?: string;
   permission: GeolocationPermission;
 };
 
+// Cache of the last-known permission state to avoid redundant permission queries.
 let cachedPermissionState: GeolocationPermission | null = null;
 
+// Queries the Permissions API (when available) for the current geolocation permission.
+// Falls back to "unknown" on unsupported environments or exceptions.
 async function queryGeolocationPermission(): Promise<GeolocationPermission> {
   if (cachedPermissionState) return cachedPermissionState;
 
@@ -46,6 +53,8 @@ async function queryGeolocationPermission(): Promise<GeolocationPermission> {
   }
 }
 
+// Extracts and normalizes coordinates from a GeolocationPosition,
+// ensuring optional fields resolve to null instead of undefined.
 function readCoordinates(position: GeolocationPosition): LocationCoordinates {
   const {
     latitude,
@@ -68,7 +77,10 @@ function readCoordinates(position: GeolocationPosition): LocationCoordinates {
   };
 }
 
+// Vue composable exposing geolocation helpers for components to consume.
 export function useUserGeolocation() {
+  // Attempts to get the user's current position with sensible defaults and
+  // returns a structured result with coordinates or a human-readable error.
   const getLocation = async (
     options: PositionOptions = {
       enableHighAccuracy: true,
@@ -127,6 +139,8 @@ export function useUserGeolocation() {
     });
   };
 
+  // Triggers/requests geolocation permission by invoking getCurrentPosition.
+  // Resolves with a best-known permission state based on the outcome.
   const requestPermission = async (
     options: PositionOptions = {
       enableHighAccuracy: false,
@@ -162,5 +176,6 @@ export function useUserGeolocation() {
     });
   };
 
+  // Public API: provide geolocation helpers for use in UI components.
   return { getLocation, requestPermission };
 }

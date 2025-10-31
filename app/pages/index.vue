@@ -46,7 +46,9 @@
                         @click="filterOpen = true; $router.push({ hash: '#find', query: route.query })" />
                 </div>
 
-                <div class="my-5">
+                <!-- Filter items -->
+                <div class="my-5 flex items-center gap-2">
+                    <FiltersNearMe />
                     <UnitFilterItemsComponent :filter-items="filterItems" @show-filter="showFilter" />
                 </div>
             </div>
@@ -88,7 +90,7 @@ const singleFilter = ref<SingleFilter | null>(null)
 
 const route = useRoute()
 const router = useRouter()
-const { getLocation } = useUserGeolocation()
+// const { getLocation } = useUserGeolocation()
 
 function handleScroll() {
     if (!stickySection.value) return
@@ -161,8 +163,8 @@ onMounted(async () => {
     handleScroll()
     window.addEventListener('scroll', handleScrollThrottled, { passive: true })
     window.addEventListener('resize', handleScrollThrottled, { passive: true })
-    const location = await getLocation()
-    console.log(location)
+    // const location = await getLocation()
+    // console.log(location)
 })
 
 onUnmounted(() => {
