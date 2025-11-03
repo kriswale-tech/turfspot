@@ -4,10 +4,10 @@
 
         <div class="space-y-4 mb-4">
             <!-- distance -->
-            <!-- <div class="flex gap-3">
+            <div class="flex gap-3">
                 <Icon name="game-icons:path-distance" class="text-xl lg:text-2xl text-primary shrink-0" />
-                <p class="text-sm lg:text-base ">32 Miles</p>
-            </div> -->
+                <p class="text-sm lg:text-base ">{{ distance !== null ? distance : '' }}</p>
+            </div>
 
 
             <!-- location -->
@@ -41,12 +41,42 @@
 interface LocationDetails {
     location: string;
     map_link: string;
+    latitude: number;
+    longitude: number;
 }
+
+import { getDistance } from 'geolib';
+const { getLocation } = useUserGeolocation();
+import type { LocationCoordinates } from '~/composables/useUserGeolocation';
 
 const props = defineProps<{
     locationDetails: LocationDetails
 }>();
 const { locationDetails } = toRefs(props);
+
+const coords = ref<LocationCoordinates | null>(null);
+
+const distance = computed(() => {
+    const result = getLocation()
+    if (coords.value) {
+        let dist = getDistance({
+            latitude: coords.value.latitude,
+            longitude: coords.value.longitude,
+        }, {
+            latitude: locationDetails.value.latitude,
+            longitude: locationDetails.value.longitude,
+        });
+        // console.log(dist);
+        return `${(dist / 1000 + 1).toFixed(2)} kilometers`;
+    }
+    // console.log('no coords');
+    return 'Unknown';
+});
+
+onMounted(async () => {
+    const result = await getLocation();
+    if (result.coords) coords.value = result.coords;
+});
 </script>
 
 <style scoped></style>

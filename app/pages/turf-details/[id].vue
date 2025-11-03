@@ -8,7 +8,8 @@
 
             <div v-if="pitch" class="bg-app-bg rounded-t-3xl relative bottom-10 p-5 space-y-5">
                 <DetailsMainDetails :pitch="pitch" />
-                <DetailsLocationDetails :location-details="{ location: pitch.location, map_link: pitch.map_link }" />
+                <DetailsLocationDetails
+                    :location-details="{ location: pitch.location, map_link: pitch.map_link, latitude: pitch.latitude, longitude: pitch.longitude }" />
                 <DetailsContactDetails
                     :contact-details="{ call_numbers: pitch.call_numbers, whatsapp_numbers: pitch.whatsapp_numbers }" />
                 <DetailsFacilitiesDetails :facilities="pitch.facilities" />
@@ -28,7 +29,7 @@
                 </div>
                 <div class="w-2/5 space-y-6">
                     <DetailsLocationDetails
-                        :location-details="{ location: pitch.location, map_link: pitch.map_link }" />
+                        :location-details="{ location: pitch.location, map_link: pitch.map_link, latitude: pitch.latitude, longitude: pitch.longitude }" />
                     <DetailsContactDetails
                         :contact-details="{ call_numbers: pitch.call_numbers, whatsapp_numbers: pitch.whatsapp_numbers }" />
                 </div>

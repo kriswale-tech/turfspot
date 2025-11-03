@@ -2,7 +2,7 @@
 export type GeolocationPermission = "granted" | "prompt" | "denied" | "unknown";
 
 // Strongly-typed structure for geolocation coordinates and related metadata.
-type LocationCoordinates = {
+export type LocationCoordinates = {
   latitude: number;
   longitude: number;
   accuracy: number;

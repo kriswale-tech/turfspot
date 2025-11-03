@@ -16,6 +16,7 @@ export const usePitchesStore = defineStore("pitches", () => {
     isLoading.value = true;
     error.value = null;
 
+    // get the query from the route
     if (withRouteQuery) pitchFilters.value = route.query as PitchFilters;
 
     try {
@@ -29,6 +30,23 @@ export const usePitchesStore = defineStore("pitches", () => {
         err instanceof Error ? err.message : "Failed to fetch pitches";
     } finally {
       isLoading.value = false;
+    }
+  };
+
+  // pitches near me
+  const fetchPitchesNearMe = async (latitude: number, longitude: number) => {
+    try {
+      isLoading.value = true;
+      const data = await $fetch<Pitch[]>(
+        `${baseUrl}/turfs/nearest?lat=${latitude}&lon=${longitude}`
+      );
+      pitches.value = data || [];
+      isLoading.value = false;
+    } catch (err: unknown) {
+      error.value =
+        err instanceof Error ? err.message : "Failed to fetch pitches near me";
+      isLoading.value = false;
+      throw new Error(error.value || "Failed to fetch pitches near me");
     }
   };
 
@@ -86,5 +104,6 @@ export const usePitchesStore = defineStore("pitches", () => {
     fetchPurposes,
     fetchPitchTypes,
     fetchFacilities,
+    fetchPitchesNearMe,
   };
 });

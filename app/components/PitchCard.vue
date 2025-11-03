@@ -15,10 +15,10 @@
             <p class="text-xs md:text-sm xl:text-[15px] dark:text-light/60 text-[#8A8A8A] line-clamp-1">{{
                 card.pitch_type }}
             </p>
-            <p class="text-xs md:text-sm xl:text-[15px] flex items-center gap-1 dark:text-white text-[#545454] line-clamp-1"
+            <p class="text-xs md:text-sm xl:text-[15px] flex items-center gap-2 dark:text-white text-[#545454] line-clamp-1"
                 :title="card.location">
-                <Icon name="material-symbols:location-on" class="text-sm" />
-                {{ card.location }}
+                <Icon name="material-symbols:location-on" class="text-lg shrink-0" />
+                {{ card.location }} {{ distance !== null ? distance : '' }}
             </p>
         </div>
 
@@ -26,17 +26,48 @@
 </template>
 
 <script setup lang="ts">
+import { getDistance } from 'geolib';
+const { getLocation } = useUserGeolocation();
+import type { LocationCoordinates } from '~/composables/useUserGeolocation';
+
 interface CardProps {
     image: string;
     name: string;
     pitch_type: string;
     location: string;
+    latitude: number;
+    longitude: number;
 }
 
 const props = defineProps<{
     card: CardProps;
 }>();
 const { card } = toRefs(props);
+
+const coords = ref<LocationCoordinates | null>(null);
+
+const distance = computed(() => {
+    const result = getLocation()
+    if (coords.value) {
+        let dist = getDistance({
+            latitude: coords.value.latitude,
+            longitude: coords.value.longitude,
+        }, {
+            latitude: props.card.latitude,
+            longitude: props.card.longitude,
+        });
+        // console.log(dist);
+        return `(${(dist / 1000 + 1).toFixed(2)}km)`;
+
+    }
+    // console.log('no coords');
+    return null;
+});
+
+onMounted(async () => {
+    const result = await getLocation();
+    if (result.coords) coords.value = result.coords;
+});
 </script>
 
 <style scoped></style>

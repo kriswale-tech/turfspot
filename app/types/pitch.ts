@@ -10,6 +10,8 @@ export interface Pitch {
   amenities: string[];
   availability: string[];
   image: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface IdName {
@@ -51,6 +53,8 @@ export interface PitchDetail {
   whatsapp_numbers: IdNumber[];
   call_numbers: IdNumber[];
   images: PitchImage[];
+  latitude: number;
+  longitude: number;
   created_at: string; // ISO datetime string
 }
 
