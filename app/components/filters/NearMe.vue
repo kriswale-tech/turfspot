@@ -14,7 +14,7 @@ import type { GetLocationResult, GeolocationPermission } from '~/composables/use
 const { fetchPitchesNearMe, fetchPitches } = usePitchesStore()
 
 const active = ref(false)
-
+const route = useRoute()
 const { getLocation } = useUserGeolocation()
 // const location = ref<GetLocationResult | null>(null)
 
@@ -22,7 +22,7 @@ async function getPitches() {
     if (active.value) {
         active.value = false
         // reset the filter
-        await fetchPitches()
+        await fetchPitches(false)
         return
     }
 
@@ -35,12 +35,12 @@ async function getPitches() {
         } catch (error) {
             console.error(error)
             active.value = false
-            await fetchPitches()
+            await fetchPitches(false)
             return
         }
     } else {
         active.value = false
-        await fetchPitches()
+        await fetchPitches(false)
         return
     }
 
@@ -59,10 +59,21 @@ function getLocationStatus(permission: GeolocationPermission) {
     }
 }
 
+// watch the route query and set the active state to false if querry is present ==> this means the user is already filtering therefore no need to fetch pitches near me
+watch(() => route.query, (newQuery) => {
+    if (newQuery) {
+        active.value = false
+    }
+})
+
 
 onMounted(async () => {
-    // console.log('Near Me mounted')
-    await getPitches()
+    // if route query is present, set the active state to false ==> this means the user is already filtering therefore no need to fetch pitches near me
+    if (route.query) {
+        active.value = false
+    } else {
+        await getPitches()
+    }
 })
 
 </script>

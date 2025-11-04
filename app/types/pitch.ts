@@ -75,6 +75,7 @@ export interface PitchFilters {
   facilities?: number[];
   purposes?: number;
   ordering?: Ordering;
+  search?: string;
 }
 
 export type PitchFilterRecord = Partial<PitchFilters>;
