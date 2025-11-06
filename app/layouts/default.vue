@@ -2,7 +2,9 @@
     <div class="font-poppins bg-app-bg">
         <NuxtLoadingIndicator />
         <slot />
-        <FooterComponent />
+        <div class="mt-16">
+            <FooterComponent />
+        </div>
     </div>
 </template>
 
