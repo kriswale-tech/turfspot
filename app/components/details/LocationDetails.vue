@@ -17,11 +17,15 @@
             </div>
 
             <!-- map -->
-            <!-- <div class="" v-if="locationDetails.map_link">
-                <iframe class="w-full aspect-video border-2 border-primary/20 rounded-lg"
-                    :src="locationDetails.map_link" :allowfullscreen="true" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div> -->
+            <div style="width:100%; aspect-ratio: 16/9" v-if="locationDetails.latitude && locationDetails.longitude">
+                <LMap ref="map" :zoom="zoom" :center="[locationDetails.latitude, locationDetails.longitude]"
+                    :use-global-leaflet="false">
+                    <LMarker :lat-lng="[locationDetails.latitude, locationDetails.longitude]" />
+                    <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
+                        layer-type="overlay" name="OpenStreetMap" />
+                </LMap>
+            </div>
         </div>
 
         <!-- buttons -->
@@ -45,6 +49,8 @@ interface LocationDetails {
     longitude: number;
 }
 
+const zoom = ref(16);
+
 import { getDistance } from 'geolib';
 const { getLocation } = useUserGeolocation();
 import type { LocationCoordinates } from '~/composables/useUserGeolocation';
@@ -57,7 +63,7 @@ const { locationDetails } = toRefs(props);
 const coords = ref<LocationCoordinates | null>(null);
 
 const distance = computed(() => {
-    const result = getLocation()
+    // const result = getLocation()
     if (coords.value) {
         let dist = getDistance({
             latitude: coords.value.latitude,

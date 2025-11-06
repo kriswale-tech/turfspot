@@ -6,7 +6,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   //tailwind
-  css: ["~/assets/css/main.css"],
+  css: [
+    "~/assets/css/main.css",
+    "leaflet-routing-machine/dist/leaflet-routing-machine.css",
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -37,5 +40,6 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/fonts",
     "@pinia/nuxt",
+    "@nuxtjs/leaflet",
   ],
 });
