@@ -26,6 +26,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL,
+      web3formsApiKey: process.env.NUXT_WEB3FORM_ACCESS_KEY,
     },
   },
 

@@ -2,6 +2,7 @@
     <div class="font-poppins bg-app-bg">
         <NuxtLoadingIndicator />
         <slot />
+        <FooterComponent />
     </div>
 </template>
 
