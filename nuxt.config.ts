@@ -6,10 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   //tailwind
-  css: [
-    "~/assets/css/main.css",
-    "leaflet-routing-machine/dist/leaflet-routing-machine.css",
-  ],
+  css: ["~/assets/css/main.css"],
   vite: {
     plugins: [tailwindcss()],
   },
