@@ -19,7 +19,10 @@
 
         <!-- desktop -->
         <div class="min-h-screen max-width py-10 hidden lg:block">
-            <AppLogo />
+            <div @click="$router.back()" class="flex gap-2 items-center w-fit cursor-pointer ">
+                <Icon name="material-symbols:arrow-back-rounded" class="text-2xl text-primary" />
+                <AppLogo />
+            </div>
 
             <div v-if="pitch" class="flex gap-5 mt-5">
                 <div class=" w-3/5 space-y-6">

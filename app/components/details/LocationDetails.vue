@@ -29,13 +29,13 @@
         </div>
 
         <!-- buttons -->
-        <div class="" v-if="locationDetails.map_link">
-            <UiButtonComponent>
-                <NuxtLink :to="locationDetails.map_link" class="flex items-center gap-2" target="_blank">
+        <div class="" v-if="mapLink">
+            <NuxtLink :to="mapLink" target="_blank" class="cursor-pointer">
+                <UiButtonComponent>
                     <Icon name="hugeicons:maps-location-01" class="text-2xl shrink-0" />
-                    <span>View Map</span>
-                </NuxtLink>
-            </UiButtonComponent>
+                    <span>Get Directions</span>
+                </UiButtonComponent>
+            </NuxtLink>
         </div>
     </div>
 </template>
@@ -77,6 +77,10 @@ const distance = computed(() => {
     }
     // console.log('no coords');
     return 'Unknown';
+});
+
+const mapLink = computed(() => {
+    return `https://www.google.com/maps/dir/?api=1&destination=${locationDetails.value.latitude},${locationDetails.value.longitude}`;
 });
 
 onMounted(async () => {

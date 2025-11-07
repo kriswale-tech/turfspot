@@ -35,22 +35,21 @@
 
         <!-- buttons -->
         <div class="space-y-2">
-            <UiButtonComponent>
-                <NuxtLink v-if="contactDetails.call_numbers[0]?.number"
-                    :href="`tel:${contactDetails.call_numbers[0].number}`" target="_blank"
-                    class="flex items-center gap-2">
+            <NuxtLink v-if="contactDetails.call_numbers[0]?.number"
+                :href="`tel:${contactDetails.call_numbers[0].number}`" target="_blank" class="flex items-center gap-2">
+                <UiButtonComponent>
                     <Icon name="hugeicons:call-02" class="text-xl lg:text-2xl shrink-0" />
                     <span>Call</span>
-                </NuxtLink>
-            </UiButtonComponent>
-            <UiButtonComponent button-style="transparent">
-                <NuxtLink v-if="contactDetails.whatsapp_numbers[0]?.number"
-                    :to="`https://wa.me/${formatNumber(contactDetails.whatsapp_numbers[0].number)}`" target="_blank"
-                    class="flex items-center gap-2">
-                    <Icon name="ic:baseline-whatsapp" class="text-xl lg:text-2xl shrink-0" />
+                </UiButtonComponent>
+            </NuxtLink>
+            <NuxtLink v-if="contactDetails.whatsapp_numbers[0]?.number"
+                :to="`https://wa.me/${formatNumber(contactDetails.whatsapp_numbers[0].number)}`" target="_blank"
+                class="flex items-center gap-2">
+                <Icon name="ic:baseline-whatsapp" class="text-xl lg:text-2xl shrink-0" />
+                <UiButtonComponent button-style="transparent">
                     <span>Whatsapp</span>
-                </NuxtLink>
-            </UiButtonComponent>
+                </UiButtonComponent>
+            </NuxtLink>
         </div>
     </div>
 </template>
