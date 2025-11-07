@@ -11,7 +11,7 @@
             <div
                 class="w-full lg:w-[calc(100%-300px)] xl:w-[calc(100%-350px)] 2xl:w-[calc(100%-400px)] lg:ml-[300px] xl:ml-[350px] 2xl:ml-[400px]">
                 <slot />
-                <div class="mt-16">
+                <div class="">
                     <FooterComponent />
                 </div>
             </div>
