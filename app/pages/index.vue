@@ -198,7 +198,6 @@ onMounted(async () => {
     window.addEventListener('resize', handleScrollThrottled, { passive: true })
     // const location = await getLocation()
     // console.log(location)
-    console.log(process.env.NODE_ENV)
 })
 
 onUnmounted(() => {
