@@ -2,6 +2,7 @@
     <div class="font-poppins bg-app-bg">
         <NuxtLoadingIndicator />
         <SpeedInsights />
+        <Analytics />
         <div class="flex">
             <!-- Side component - fixed on left for screens > 1024px -->
             <div
@@ -22,6 +23,7 @@
 
 <script setup lang="ts">
 import { SpeedInsights } from "@vercel/speed-insights/nuxt"
+import { Analytics } from '@vercel/analytics/nuxt'
 </script>
 
 <style scoped></style>
