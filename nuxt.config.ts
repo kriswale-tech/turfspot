@@ -50,6 +50,11 @@ export default defineNuxtConfig({
     domains: ["res.cloudinary.com"],
   },
 
+  // gtag
+  gtag: {
+    id: "G-F3TC4Y2PHD",
+  },
+
   modules: [
     "@nuxt/icon",
     "@nuxt/eslint",
@@ -57,5 +62,6 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
     "@pinia/nuxt",
     "@nuxtjs/leaflet",
+    "nuxt-gtag",
   ],
 });
