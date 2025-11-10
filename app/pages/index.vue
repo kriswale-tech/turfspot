@@ -80,6 +80,39 @@ definePageMeta({
     layout: 'pitchlistings'
 })
 
+useHead({
+    title: 'Find Astro Turfs in Ghana | TurfSpot',
+    meta: [
+        { name: "description", content: 'Discover and book the best astro turfs across Ghana. Filter by location, price, facilities, and get detailed turf information with TurfSpot.' },
+        { name: "keywords", content: "astro turfs, astro turf, astro turf ghana, astro turf in ghana, astro turf in ghana, turfs, turfs in ghana, turfspot, turfspot ghana, turfspot in ghana, turfspot in ghana, turfspot ghana, turfspot in ghana, turfspot ghana, turfspot in ghana" },
+        { name: "robots", content: "index, follow" },
+        { name: "author", content: "TurfSpot" },
+        { name: "publisher", content: "TurfSpot" },
+    ],
+    link: [
+        { rel: "canonical", href: 'https://turfspotgh.com' },
+    ],
+})
+
+if (import.meta.server) {
+    useSeoMeta({
+        title: 'Find Astro Turfs in Ghana | TurfSpot',
+        ogTitle: 'Find Astro Turfs in Ghana | TurfSpot',
+        twitterTitle: 'Find Astro Turfs in Ghana | TurfSpot',
+        description: 'Discover and book the best astro turfs across Ghana. Filter by location, price, facilities, and get detailed turf information with TurfSpot.',
+        ogDescription: 'Discover and book the best astro turfs across Ghana. Filter by location, price, facilities, and get detailed turf information with TurfSpot.',
+        twitterDescription: 'Discover and book the best astro turfs across Ghana. Filter by location, price, facilities, and get detailed turf information with TurfSpot.',
+        ogType: 'website',
+        ogImage: '/images/pitch-5.png',
+        twitterImage: '/images/pitch-5.png',
+        ogUrl: 'https://turfspotgh.com',
+        ogSiteName: 'TurfSpot',
+        twitterSite: 'TurfSpot',
+        twitterCreator: 'TurfSpot',
+        twitterCard: 'summary_large_image',
+    })
+}
+
 const stickySection = ref<HTMLElement | null>(null)
 const isStuck = ref(false)
 const isDark = ref(false)
