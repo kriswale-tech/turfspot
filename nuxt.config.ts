@@ -5,6 +5,24 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
+  // app
+  app: {
+    head: {
+      title: "Find the best Astro Turfs in Ghana on TurfSpot", // default fallback title
+      htmlAttrs: {
+        lang: "en",
+      },
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      meta: [
+        {
+          name: "description",
+          content:
+            "Find the best Astro Turfs in Ghana on TurfSpot. Discover and book Astro Turfs effortlessly with TurfSpot.",
+        },
+      ],
+    },
+  },
+
   //tailwind
   css: ["~/assets/css/main.css"],
   vite: {
